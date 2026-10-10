@@ -42,7 +42,7 @@ environment variables.
 
 ### Render
 
-From this `new-product` directory, Render can use:
+From this `credport` directory, Render can use:
 
 - `render.yaml`
 - `Dockerfile.api`
@@ -81,7 +81,7 @@ pnpm --filter @credport/api start
 
 ## 4. Product App Deploy
 
-Deploy to Vercel from the monorepo root (`new-product`) with:
+Deploy to Vercel from the monorepo root (`credport`) with:
 
 - install command: `pnpm install --frozen-lockfile`
 - build command: `pnpm --filter @credport/product build`
