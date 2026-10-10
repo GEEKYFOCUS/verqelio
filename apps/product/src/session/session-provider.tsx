@@ -22,14 +22,8 @@ import { didStellar } from '@credport/sdk/did';
 import type { StellarNetwork } from '@credport/sdk/did';
 import { getWalletConnector } from './wallet-connector';
 
-// Next.js inlines NEXT_PUBLIC_* at build time.
-declare const NEXT_PUBLIC_STELLAR_NETWORK: string | undefined;
-
 function resolveNetwork(): StellarNetwork {
-  const raw =
-    typeof NEXT_PUBLIC_STELLAR_NETWORK !== 'undefined'
-      ? (NEXT_PUBLIC_STELLAR_NETWORK as string)
-      : 'testnet';
+  const raw = process.env.NEXT_PUBLIC_STELLAR_NETWORK ?? 'testnet';
   return raw === 'mainnet' ? 'mainnet' : 'testnet';
 }
 

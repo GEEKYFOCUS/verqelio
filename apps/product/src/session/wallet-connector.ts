@@ -138,7 +138,7 @@ class RealWalletConnector implements WalletConnector {
     }
   }
   disconnect(): Promise<void> {
-    throw new Error('Method not implemented.');
+    return Promise.resolve();
   }
 
   async connect(): Promise<{ address: string }> {
