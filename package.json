@@ -1,0 +1,23 @@
+{
+  "name": "credport",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CredPort monorepo: portable verifiable credentials, product app, API, SDK, and Soroban contracts.",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=22.22.1 <25"
+  },
+  "packageManager": "pnpm@10.25.0",
+  "devDependencies": {
+    "prettier": "^3.8.2",
+    "turbo": "^2.3.0"
+  }
+}

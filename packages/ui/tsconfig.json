@@ -1,0 +1,4 @@
+{
+  "extends": "@credport/config/typescript/base",
+  "include": ["src"]
+}

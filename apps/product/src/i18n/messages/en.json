@@ -1,0 +1,285 @@
+{
+  "meta": {
+    "title": "Credit Passport — CredPort",
+    "description": "Portable credit history for financial inclusion, built on CredPort verifiable credentials."
+  },
+  "nav": {
+    "home": "Home",
+    "vault": "Vault",
+    "credentials": "My credentials",
+    "share": "Share",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "language": "Language",
+    "localeEn": "English",
+    "localeEs": "Español"
+  },
+  "footer": {
+    "tagline": "Portable credit history built on CredPort verifiable credentials.",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "appName": "Credit History",
+    "comingSoon": "Coming soon",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "home": {
+    "title": "Credit History",
+    "description": "Portable credit history built on CredPort verifiable credentials. Product skeleton — nothing implemented yet.",
+    "protocol": "CredPort Protocol",
+    "subtitle": "Own, manage, and share your verifiable credit reputation. Port your financial history securely without relying on centralized credit bureaus.",
+    "shareTitle": "Generate Presentation",
+    "shareDesc": "Select credit credentials and create a secure, verifiable link to share with lenders.",
+    "shareFeatures": "Supports custom expiration dates and dynamic on-chain verification checks.",
+    "ready": "Ready",
+    "getStarted": "Get Started",
+    "vaultTitle": "My Credit Vault",
+    "vaultDesc": "View your scores, repayment history, and verify identity credentials in your personal vault.",
+    "vaultFeatures": "Direct cryptographic vault interactions and real-time did:stellar resolver.",
+    "unavailable": "Unavailable",
+    "identityMethod": "Identity Method:",
+    "techStack": "Built with Next.js 16, React 19, and Tailwind CSS v4."
+  },
+  "vault": {
+    "title": "My Credit Vault",
+    "subtitle": "Your verifiable credit reputation at a glance, owned by you.",
+    "loading": "Loading your vault…",
+    "connect": {
+      "title": "Connect your wallet",
+      "description": "Connect your Stellar wallet to view your credit vault."
+    },
+    "empty": {
+      "title": "No credentials yet",
+      "description": "Once issuers grant you credit credentials, your vault summary will appear here."
+    },
+    "error": {
+      "title": "Couldn't load your vault",
+      "description": "Something went wrong while reading your vault. Please try again.",
+      "retry": "Try again"
+    },
+    "summary": {
+      "title": "Credit profile summary",
+      "disclaimer": "An informational overview of your verifiable credentials. This is not a credit score or risk assessment.",
+      "stats": {
+        "score": "Average score",
+        "activeCredentials": "Active credentials",
+        "repaidLoans": "Repaid loans",
+        "riskCategory": "Risk category",
+        "historySince": "History since"
+      },
+      "categoriesTitle": "By category",
+      "timeline": {
+        "today": "Today",
+        "caption": "A snapshot of your verifiable credit history."
+      }
+    },
+    "risk": {
+      "Low": "Low",
+      "Medium": "Medium",
+      "High": "High"
+    },
+    "identity": {
+      "title": "Holder identity",
+      "name": "Holder name",
+      "did": "Holder DID"
+    },
+    "noValue": "—",
+    "viewCredentials": "View all credentials",
+    "sharedLinks": {
+      "title": "Shared links",
+      "description": "Links you've created to share your credentials with verifiers.",
+      "loading": "Loading your shared links…",
+      "empty": {
+        "title": "No shared links yet",
+        "description": "Links you generate from the Share page will show up here so you can track and revoke them."
+      },
+      "error": {
+        "title": "Couldn't load your shared links",
+        "description": "Something went wrong while reading your shared links. Please try again.",
+        "retry": "Try again"
+      },
+      "created": "Created",
+      "expires": "Expires",
+      "credentialCount": "{count, plural, one {# credential} other {# credentials}}",
+      "revoked": "Revoked",
+      "revokedAt": "Revoked on {date, date, medium}",
+      "revoke": "Revoke",
+      "revoking": "Revoking…",
+      "revokeConfirm": "Revoke this link? Anyone holding it will immediately lose access.",
+      "revokeError": "The link could not be revoked. Please try again."
+    }
+  },
+  "credentials": {
+    "title": "My Credentials",
+    "description": "Your verifiable credentials will appear here.",
+    "subtitle": "Your credit credentials, owned by you and ready to share.",
+    "summary": {
+      "title": "Credit profile summary",
+      "disclaimer": "An informational overview of your verifiable credentials. This is not a credit score or risk assessment.",
+      "stats": {
+        "total": "Total credentials",
+        "valid": "Current",
+        "revoked": "Revoked",
+        "historySince": "History since"
+      },
+      "categoriesTitle": "By category",
+      "timeline": {
+        "today": "Today",
+        "caption": "A snapshot of your verifiable credit history."
+      }
+    },
+    "results": "{count, plural, =0 {No credentials} one {# credential} other {# credentials}}",
+    "filters": {
+      "category": "Category",
+      "status": "Status",
+      "all": "All",
+      "clear": "Clear filters"
+    },
+    "category": {
+      "INCOME": "Income",
+      "EMPLOYMENT": "Employment",
+      "REPAYMENT_HISTORY": "Repayment history",
+      "LOAN": "Loan",
+      "UTILITY": "Utility"
+    },
+    "status": {
+      "valid": "Current",
+      "revoked": "Revoked on {date, date, medium}",
+      "revokedNoDate": "Revoked",
+      "invalid": "Invalid"
+    },
+    "item": {
+      "issuer": "Issuer",
+      "issued": "Issued {date, date, medium}",
+      "viewDetail": "View details"
+    },
+    "loading": "Loading your credentials…",
+    "empty": {
+      "title": "No credentials yet",
+      "description": "Once issuers grant you credit credentials, they will appear here.",
+      "connectTitle": "Connect your wallet",
+      "connectDescription": "Connect your Stellar wallet to access your credentials."
+    },
+    "emptyFiltered": {
+      "title": "No credentials match these filters",
+      "description": "Try clearing the filters to see all your credentials."
+    },
+    "error": {
+      "title": "Couldn't load your credentials",
+      "description": "Something went wrong while reading your vault. Please try again.",
+      "retry": "Try again"
+    },
+    "detail": {
+      "back": "Back to credentials",
+      "share": "Share",
+      "issuerDid": "Issuer DID",
+      "claims": "Claims",
+      "loadingDetail": "Loading credential…",
+      "notFound": {
+        "title": "Credential not found",
+        "description": "This credential does not exist or is no longer available in your vault."
+      },
+      "error": {
+        "title": "Couldn't load this credential",
+        "description": "Something went wrong while reading this credential. Please try again.",
+        "retry": "Try again"
+      }
+    }
+  },
+  "share": {
+    "title": "Share Presentation",
+    "subtitle": "Select credentials to generate a secure presentation link for lenders.",
+    "connect": {
+      "title": "Connect your wallet",
+      "description": "Connect your Stellar wallet to select credentials and generate a presentation link."
+    },
+    "selectCredentials": "Select Credentials",
+    "selectCredentialsDesc": "Only selected items will be encoded and shared in the presentation.",
+    "expirationOptions": "Presentation Expiration",
+    "expirationOptionsDesc": "Set how long the generated verification link remains active.",
+    "exp": {
+      "hour1": "1 Hour",
+      "day1": "1 Day",
+      "days7": "7 Days",
+      "days30": "30 Days",
+      "custom": "Custom Expiration",
+      "never": "No Expiration"
+    },
+    "generateBtn": "Generate Shareable Link",
+    "generating": "Generating Link...",
+    "linkReady": "Shareable Link Generated",
+    "linkReadyDesc": "Provide this link to lenders. They can verify your credentials without relying on central intermediaries.",
+    "copySuccess": "Copied to clipboard!",
+    "previewBtn": "Preview Verification Report",
+    "backBtn": "Create New Presentation",
+    "noSelection": "Please select at least one credential to generate a shareable presentation.",
+    "customDateLabel": "Choose Custom Expiration Date & Time",
+    "loadingVault": "Loading vault data...",
+    "sharedDetails": "Shared Details:",
+    "holder": "Holder",
+    "expiration": "Expiration",
+    "includedCredentials": "Included Credentials ({count})",
+    "deselectAll": "Deselect All",
+    "selectAll": "Select All",
+    "value": "Value:",
+    "issuer": "Issuer:",
+    "vaultTitle": "CredPort Credit Vault",
+    "revoked": "Revoked",
+    "valid": "Valid",
+    "noHolder": "Connect your wallet to generate a presentation link.",
+    "generateError": "The presentation link could not be generated. Please try again."
+  },
+  "verify": {
+    "title": "Verifiable presentation report",
+    "subtitle": "Cryptographically verified via CredPort on the Stellar network",
+    "loading": "Running cryptographic verification…",
+    "holderInfo": "Holder details",
+    "holderName": "Holder name",
+    "holderDid": "Holder DID",
+    "expiration": "Expires",
+    "neverExpires": "Never expires",
+    "expiredAt": "Expired at",
+    "credentialsIncluded": "Included verifiable credentials",
+    "claims": "Claims",
+    "backToApp": "Go to wallet dashboard",
+    "banner": {
+      "valid": {
+        "title": "Verified & valid",
+        "description": "This presentation's credentials are cryptographically verified against the issuer and are currently valid."
+      },
+      "revoked": {
+        "title": "Revoked presentation",
+        "description": "This presentation contains one or more credentials that have been revoked by their issuer."
+      },
+      "invalid": {
+        "title": "Invalid or expired presentation",
+        "description": "This verification link has expired, is malformed, or has been invalidated."
+      }
+    },
+    "invalid": {
+      "title": "Presentation verification failed",
+      "description": "The verification token could not be decrypted, decoded, or validated. Please request a new link from the credential owner.",
+      "expiredDescription": "This verification link expired on {date, date, medium} at {date, time, short}. Please request a new link from the credential owner.",
+      "revokedDescription": "This verification link was revoked by the credential owner. Please request a new link from them."
+    },
+    "attribution": {
+      "title": "Presented by the holder",
+      "description": "This presentation is cryptographically attributed to the holder shown above.",
+      "unsignedTitle": "Attribution not available",
+      "unsignedDescription": "This link wasn't signed by the holder's wallet. Its contents are still tamper-evident (the link itself cannot be edited or extended), but nothing here cryptographically proves who put it together.",
+      "mismatchTitle": "Attribution could not be verified",
+      "mismatchDescription": "This presentation carries a signature that does not check out against the holder's key. The on-chain credential statuses below are unaffected, but this presentation cannot be attributed to the holder — treat it with caution.",
+      "whatThisMeans": "This is about who assembled this link, not whether the credentials in it are valid — that's shown separately above."
+    }
+  },
+  "session": {
+    "connect": "Connect wallet",
+    "connecting": "Connecting…",
+    "disconnect": "Disconnect",
+    "connectedAs": "Connected as",
+    "notConnected": "No wallet connected",
+    "connectCta": "Connect your Stellar wallet to access your credentials.",
+    "connectButton": "Connect wallet"
+  }
+}

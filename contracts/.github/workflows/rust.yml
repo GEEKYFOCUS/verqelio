@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install wasm32v1-none target
+        run: rustup target add wasm32v1-none
+
+      - name: Build vc-vault WASM (required by vc-vault-factory tests)
+        run: cargo rustc -p vc-vault-contract --target wasm32v1-none --release -- --crate-type cdylib
+
+      - name: Build did-stellar-registry WASM
+        run: cargo build -p did-stellar-registry --target wasm32v1-none --release
+
+      - name: Build (native)
+        run: cargo build --verbose
+
+      - name: Run tests
+        run: cargo test --verbose

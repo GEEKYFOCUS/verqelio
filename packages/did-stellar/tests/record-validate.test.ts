@@ -1,0 +1,162 @@
+import { Keypair, StrKey } from '@stellar/stellar-sdk';
+import { describe, expect, it } from 'vitest';
+
+import { DidError } from '../src/errors';
+import { validateDidRecordInput } from '../src/record/validate';
+
+import type { DidRecordInput } from '../src/record/types';
+
+const CONTROLLER = Keypair.random().publicKey();
+// A valid Soroban contract address (C...) — the registry contract types the
+// controller as `Address`, so a smart account / contract is a valid controller.
+const CONTRACT_CONTROLLER = StrKey.encodeContract(Buffer.alloc(32, 7));
+const KEY_AUTH = 'z6MkhaXgBZDvotDkL5257faiztiGiC2QtKLGpbnnEGta2doY';
+const KEY_ASSERT = 'z6Mkff3F4VMDGbMbMtgRyXMrgr7qyxaKsPo7QEPQ2AkNrx2X';
+const KEY_AGR = 'z6LSnGSQaEk7SBZMmMLHTCqz6YUuiVVCmBNdAqSVdepqYAW1';
+
+const minimal = (overrides: Partial<DidRecordInput> = {}): DidRecordInput => ({
+  controller: CONTROLLER,
+  authentication: [{ publicKeyMultibase: KEY_AUTH }],
+  assertionMethod: [],
+  keyAgreement: [],
+  services: [],
+  ...overrides,
+});
+
+describe('validateDidRecordInput', () => {
+  it('accepts a minimal valid record', () => {
+    expect(() => validateDidRecordInput(minimal())).not.toThrow();
+  });
+
+  it('accepts a full valid record', () => {
+    expect(() =>
+      validateDidRecordInput(
+        minimal({
+          assertionMethod: [{ publicKeyMultibase: KEY_ASSERT }],
+          keyAgreement: [{ publicKeyMultibase: KEY_AGR }],
+          services: [
+            {
+              idSuffix: 'issuer',
+              serviceType: 'LinkedDomains',
+              serviceEndpoint: 'https://issuer.example.com',
+            },
+          ],
+        })
+      )
+    ).not.toThrow();
+  });
+
+  it('accepts a contract (C...) controller', () => {
+    expect(() =>
+      validateDidRecordInput(minimal({ controller: CONTRACT_CONTROLLER }))
+    ).not.toThrow();
+  });
+
+  it('rejects an invalid controller', () => {
+    try {
+      validateDidRecordInput(minimal({ controller: 'not-a-g-address' }));
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect(DidError.is(err)).toBe(true);
+      expect((err as DidError).code).toBe('controller_invalid');
+    }
+  });
+
+  it('rejects authentication with zero keys', () => {
+    expect(() => validateDidRecordInput(minimal({ authentication: [] }))).toThrowError(
+      /invalid_auth_key_count|/
+    );
+  });
+
+  it('rejects more than 3 assertion keys', () => {
+    expect(() =>
+      validateDidRecordInput(
+        minimal({
+          assertionMethod: [
+            { publicKeyMultibase: KEY_ASSERT },
+            { publicKeyMultibase: KEY_ASSERT },
+            { publicKeyMultibase: KEY_ASSERT },
+            { publicKeyMultibase: KEY_ASSERT },
+          ],
+        })
+      )
+    ).toThrow();
+  });
+
+  it('allows the same key across distinct verification relationships', () => {
+    // Reusing one key across `authentication` and `assertionMethod` is
+    // the idiomatic shape for an issuer DID: one Ed25519 key proves
+    // control of the DID AND signs the credentials it issues.
+    expect(() =>
+      validateDidRecordInput(
+        minimal({
+          assertionMethod: [{ publicKeyMultibase: KEY_AUTH }],
+        })
+      )
+    ).not.toThrow();
+  });
+
+  it('rejects duplicate keys within the same relationship', () => {
+    try {
+      validateDidRecordInput(
+        minimal({
+          assertionMethod: [{ publicKeyMultibase: KEY_ASSERT }, { publicKeyMultibase: KEY_ASSERT }],
+        })
+      );
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect(DidError.is(err)).toBe(true);
+      expect((err as DidError).code).toBe('duplicate_key');
+    }
+  });
+
+  it('rejects metadataHash without metadataUri', () => {
+    try {
+      validateDidRecordInput({
+        ...minimal(),
+        metadataHash: '0'.repeat(64),
+      });
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect((err as DidError).code).toBe('metadata_inconsistent');
+    }
+  });
+
+  it('rejects http:// service endpoints', () => {
+    try {
+      validateDidRecordInput(
+        minimal({
+          services: [
+            {
+              idSuffix: 'issuer',
+              serviceType: 'LinkedDomains',
+              serviceEndpoint: 'http://issuer.example.com',
+            },
+          ],
+        })
+      );
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect((err as DidError).code).toBe('service_endpoint_invalid');
+    }
+  });
+
+  it('rejects an invalid service idSuffix', () => {
+    try {
+      validateDidRecordInput(
+        minimal({
+          services: [
+            {
+              idSuffix: '-bad',
+              serviceType: 'LinkedDomains',
+              serviceEndpoint: 'https://issuer.example.com',
+            },
+          ],
+        })
+      );
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect((err as DidError).code).toBe('service_id_invalid_format');
+    }
+  });
+});

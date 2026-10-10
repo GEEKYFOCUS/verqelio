@@ -1,0 +1,45 @@
+services:
+  - type: web
+    name: credport-api
+    env: docker
+    dockerfilePath: ./Dockerfile.api
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: API_KEY_SECRET
+        sync: false
+      - key: ADMIN_BOOTSTRAP_SECRET
+        sync: false
+      - key: CREDENTIAL_ENCRYPTION_KEY
+        sync: false
+      - key: ISSUER_IDENTITY_ENCRYPTION_KEY
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+      - key: DID_REGISTRY_CONTRACT_ID
+        sync: false
+      - key: VC_VAULT_FACTORY_CONTRACT_ID
+        sync: false
+      - key: VC_VAULT_WASM_HASH
+        sync: false
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_USERNAME
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false

@@ -1,0 +1,35 @@
+{
+  "name": "@credport/sdk",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Thin integration layer over @credport/credentials. Products consume CredPort exclusively through this package.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./did": "./src/did.ts",
+    "./hooks": "./src/hooks.ts",
+    "./types": "./src/types.ts",
+    "./presentation": "./src/presentation.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@credport/types": "workspace:*",
+    "@credport/credentials": "workspace:*",
+    "@stellar/stellar-sdk": "^15.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "devDependencies": {
+    "@credport/config": "workspace:*",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "typescript": "^5",
+    "vitest": "^4.1.10"
+  }
+}

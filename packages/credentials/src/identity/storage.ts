@@ -1,0 +1,380 @@
+/**
+ * Default storage implementations for issuer identities.
+ *
+ * - `InMemoryIssuerIdentityStorage` — process-local map. Default in Node
+ *   environments and as a fallback when no other backend is configured.
+ * - `IndexedDbIssuerIdentityStorage` — browser-only, persists across tabs and
+ *   reloads. The Ed25519 assertion private key is encrypted at rest with
+ *   AES-256-GCM using a **non-extrcredportble** WebCrypto key kept in IndexedDB, so
+ *   the raw key never sits in the database in plaintext. (Note: this defends
+ *   against passive exfiltration — backups, another origin, dev-tools dumps —
+ *   but an attacker running code on the same origin, e.g. via XSS, can still
+ *   use the key handle to sign. Keep your origin XSS-free.)
+ *
+ * Integrators with custom requirements (KMS, encrypted file, hardware wallet)
+ * implement {@link IssuerIdentityStorage} themselves and pass it to the client.
+ *
+ * A backend that cannot survive a process restart marks itself with
+ * `isEphemeral = true`. `IssuerIdentityProvider` refuses to register a DID on
+ * an ephemeral backend it selected by itself, throwing
+ * {@link EphemeralIssuerStorageError} — see that class for the rationale.
+ */
+
+import type { IssuerIdentity, IssuerIdentityStorage } from "./types";
+
+/**
+ * Process-local map. State is lost when the process exits.
+ *
+ * Selecting it deliberately (tests, throwaway demos, a browser tab that
+ * re-onboards every load) is fine. Falling into it by default on a server is
+ * not, which is why it is flagged {@link IssuerIdentityStorage.isEphemeral}.
+ */
+export class InMemoryIssuerIdentityStorage implements IssuerIdentityStorage {
+  /** This backend does not survive a process restart. */
+  readonly isEphemeral = true;
+
+  private readonly store = new Map<string, IssuerIdentity>();
+
+  async get(
+    controller: string,
+    network: "mainnet" | "testnet"
+  ): Promise<IssuerIdentity | null> {
+    return this.store.get(this.key(controller, network)) ?? null;
+  }
+
+  async set(
+    identity: IssuerIdentity,
+    network: "mainnet" | "testnet"
+  ): Promise<void> {
+    this.store.set(this.key(identity.controller, network), identity);
+  }
+
+  private key(controller: string, network: "mainnet" | "testnet"): string {
+    return `${network}:${controller}`;
+  }
+}
+
+/** Envelope for the AES-GCM encrypted private key (base64url iv + ciphertext). */
+interface EncryptedField {
+  iv: string;
+  data: string;
+}
+
+/** On-disk record: each private key is replaced by an encrypted envelope. */
+type StoredRecord = Omit<
+  IssuerIdentity,
+  "assertionPrivateKeyHex" | "authenticationPrivateKeyHex"
+> & {
+  assertionPrivateKeyHex?: string;
+  authenticationPrivateKeyHex?: string;
+  _encPk?: EncryptedField;
+  _encAuthPk?: EncryptedField;
+};
+
+function subtle(): SubtleCrypto | null {
+  const c = (globalThis as { crypto?: Crypto }).crypto;
+  return c && typeof c.subtle !== "undefined" ? c.subtle : null;
+}
+
+function toB64(bytes: Uint8Array): string {
+  let s = "";
+  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i] as number);
+  return btoa(s);
+}
+
+function fromB64(b64: string): Uint8Array {
+  const s = atob(b64);
+  const out = new Uint8Array(s.length);
+  for (let i = 0; i < s.length; i++) out[i] = s.charCodeAt(i);
+  return out;
+}
+
+/** Encrypt one string field under AES-GCM with a fresh 96-bit IV. */
+async function encryptField(
+  s: SubtleCrypto,
+  key: CryptoKey,
+  value: string
+): Promise<EncryptedField> {
+  const iv = (globalThis.crypto as Crypto).getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(
+    await s.encrypt(
+      { name: "AES-GCM", iv: iv as unknown as BufferSource },
+      key,
+      new TextEncoder().encode(value) as unknown as BufferSource
+    )
+  );
+  return { iv: toB64(iv), data: toB64(ct) };
+}
+
+/** Inverse of {@link encryptField}. */
+async function decryptField(
+  s: SubtleCrypto,
+  key: CryptoKey,
+  field: EncryptedField
+): Promise<string> {
+  const pt = new Uint8Array(
+    await s.decrypt(
+      { name: "AES-GCM", iv: fromB64(field.iv) as unknown as BufferSource },
+      key,
+      fromB64(field.data) as unknown as BufferSource
+    )
+  );
+  return new TextDecoder().decode(pt);
+}
+
+/**
+ * Browser-only storage backed by IndexedDB. Falls back to throwing on
+ * unsupported runtimes — callers MUST check {@link isIndexedDbAvailable}
+ * first or use {@link autoSelectStorage}.
+ */
+export class IndexedDbIssuerIdentityStorage implements IssuerIdentityStorage {
+  private static readonly DB_NAME = "credport-issuer-identity";
+  private static readonly STORE_NAME = "identities";
+  private static readonly KEY_STORE_NAME = "crypto-keys";
+  private static readonly AES_KEY_ID = "assertion-key-aes-gcm";
+  private static readonly DB_VERSION = 2;
+
+  private static warnedNoCrypto = false;
+
+  async get(
+    controller: string,
+    network: "mainnet" | "testnet"
+  ): Promise<IssuerIdentity | null> {
+    const db = await this.openDb();
+    try {
+      const record = await new Promise<StoredRecord | null>((resolve, reject) => {
+        const tx = db.transaction(IndexedDbIssuerIdentityStorage.STORE_NAME, "readonly");
+        const store = tx.objectStore(IndexedDbIssuerIdentityStorage.STORE_NAME);
+        const req = store.get(this.key(controller, network));
+        req.onsuccess = () => resolve((req.result as StoredRecord | undefined) ?? null);
+        req.onerror = () => reject(req.error);
+      });
+      if (!record) return null;
+      return await this.decryptRecord(db, record);
+    } finally {
+      db.close();
+    }
+  }
+
+  async set(
+    identity: IssuerIdentity,
+    network: "mainnet" | "testnet"
+  ): Promise<void> {
+    const db = await this.openDb();
+    try {
+      const record = await this.encryptRecord(db, identity);
+      await new Promise<void>((resolve, reject) => {
+        const tx = db.transaction(IndexedDbIssuerIdentityStorage.STORE_NAME, "readwrite");
+        const store = tx.objectStore(IndexedDbIssuerIdentityStorage.STORE_NAME);
+        const req = store.put(record, this.key(identity.controller, network));
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    } finally {
+      db.close();
+    }
+  }
+
+  private async encryptRecord(
+    db: IDBDatabase,
+    identity: IssuerIdentity
+  ): Promise<StoredRecord> {
+    const s = subtle();
+    if (!s) {
+      IndexedDbIssuerIdentityStorage.warnNoCrypto();
+      return { ...identity };
+    }
+    const key = await this.getOrCreateAesKey(db, s);
+    const {
+      assertionPrivateKeyHex: _omitAssertion,
+      authenticationPrivateKeyHex: _omitAuth,
+      ...rest
+    } = identity;
+    void _omitAssertion;
+    void _omitAuth;
+    const record: StoredRecord = {
+      ...rest,
+      _encPk: await encryptField(s, key, identity.assertionPrivateKeyHex),
+    };
+    // Identities created before the two-key split have no authentication key.
+    if (identity.authenticationPrivateKeyHex !== undefined) {
+      record._encAuthPk = await encryptField(s, key, identity.authenticationPrivateKeyHex);
+    }
+    return record;
+  }
+
+  private async decryptRecord(
+    db: IDBDatabase,
+    record: StoredRecord
+  ): Promise<IssuerIdentity> {
+    if (!record._encPk) {
+      // Legacy plaintext record (written before at-rest encryption).
+      return record as IssuerIdentity;
+    }
+    const s = subtle();
+    if (!s) throw new Error("WebCrypto unavailable: cannot decrypt stored issuer key");
+    const key = await this.getOrCreateAesKey(db, s);
+    const assertionPrivateKeyHex = await decryptField(s, key, record._encPk);
+    const authenticationPrivateKeyHex = record._encAuthPk
+      ? await decryptField(s, key, record._encAuthPk)
+      : undefined;
+    const { _encPk: _drop, _encAuthPk: _dropAuth, ...rest } = record;
+    void _drop;
+    void _dropAuth;
+    return {
+      ...rest,
+      assertionPrivateKeyHex,
+      ...(authenticationPrivateKeyHex !== undefined ? { authenticationPrivateKeyHex } : {}),
+    } as IssuerIdentity;
+  }
+
+  private async getOrCreateAesKey(db: IDBDatabase, s: SubtleCrypto): Promise<CryptoKey> {
+    const existing = await new Promise<CryptoKey | null>((resolve, reject) => {
+      const tx = db.transaction(IndexedDbIssuerIdentityStorage.KEY_STORE_NAME, "readonly");
+      const store = tx.objectStore(IndexedDbIssuerIdentityStorage.KEY_STORE_NAME);
+      const req = store.get(IndexedDbIssuerIdentityStorage.AES_KEY_ID);
+      req.onsuccess = () => resolve((req.result as CryptoKey | undefined) ?? null);
+      req.onerror = () => reject(req.error);
+    });
+    if (existing) return existing;
+
+    // Non-extrcredportble: the key cannot be exported/exfiltrated, only used.
+    const key = await s.generateKey({ name: "AES-GCM", length: 256 }, false, [
+      "encrypt",
+      "decrypt",
+    ]);
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(IndexedDbIssuerIdentityStorage.KEY_STORE_NAME, "readwrite");
+      const store = tx.objectStore(IndexedDbIssuerIdentityStorage.KEY_STORE_NAME);
+      const req = store.put(key, IndexedDbIssuerIdentityStorage.AES_KEY_ID);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+    return key;
+  }
+
+  private static warnNoCrypto(): void {
+    if (IndexedDbIssuerIdentityStorage.warnedNoCrypto) return;
+    IndexedDbIssuerIdentityStorage.warnedNoCrypto = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      "[credport] WebCrypto (crypto.subtle) is unavailable; the issuer private key " +
+        "will be stored WITHOUT at-rest encryption. Serve the app over HTTPS/localhost."
+    );
+  }
+
+  private key(controller: string, network: "mainnet" | "testnet"): string {
+    return `${network}:${controller}`;
+  }
+
+  private openDb(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(
+        IndexedDbIssuerIdentityStorage.DB_NAME,
+        IndexedDbIssuerIdentityStorage.DB_VERSION
+      );
+      req.onupgradeneeded = () => {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(IndexedDbIssuerIdentityStorage.STORE_NAME)) {
+          db.createObjectStore(IndexedDbIssuerIdentityStorage.STORE_NAME);
+        }
+        if (!db.objectStoreNames.contains(IndexedDbIssuerIdentityStorage.KEY_STORE_NAME)) {
+          db.createObjectStore(IndexedDbIssuerIdentityStorage.KEY_STORE_NAME);
+        }
+      };
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+}
+
+/** Detect whether the current runtime exposes a functional IndexedDB. */
+export function isIndexedDbAvailable(): boolean {
+  return (
+    typeof globalThis !== "undefined" &&
+    typeof (globalThis as { indexedDB?: unknown }).indexedDB !== "undefined"
+  );
+}
+
+/** Body of {@link EphemeralIssuerStorageError}: what broke, and both ways out. */
+const EPHEMERAL_STORAGE_MESSAGE = `[credport] Refusing to register a new did:stellar on ephemeral issuer-identity storage.
+
+No \`storage\` was configured, so the SDK fell back to an in-memory map that is lost when
+this process exits. Registering here mints a NEW DID and a NEW signing key on every
+restart (deploy, crash, autoscale), and every credential already issued stays signed by a
+DID this issuer no longer uses.
+
+Pass a persistent IssuerIdentityStorage:
+
+  new CredPortClient(url, apiKey, { storage: myStorage })
+
+\`myStorage\` implements two methods — get(controller, network) and set(identity, network)
+— over your database, a KMS, or an encrypted file. The identity holds private keys:
+encrypt it at rest.
+
+If an identity that dies with the process is what you actually want (tests, throwaway
+demos), say so explicitly:
+
+  new CredPortClient(url, apiKey, { allowEphemeralStorage: true })`;
+
+/**
+ * Thrown when the SDK is asked to register a new `did:stellar` while the
+ * issuer identity would be written to a storage backend that dies with the
+ * process — and that backend was chosen by the SDK, not by the integrator.
+ *
+ * Letting it through is the expensive failure: every restart (deploy, crash,
+ * autoscale) finds no stored identity, mints a fresh keypair, registers
+ * another DID on-chain, and signs from then on as a different issuer. Nothing
+ * surfaces until somebody asks why last week's credentials point at an issuer
+ * this service no longer recognises as itself. So the SDK stops here, before
+ * the signature prompt and before any chain interaction.
+ *
+ * Clearing it is a one-line decision, either way:
+ *   - durable identity → pass a persistent `storage`
+ *   - disposable identity → pass `allowEphemeralStorage: true`, or hand in an
+ *     ephemeral backend explicitly (e.g. `new InMemoryIssuerIdentityStorage()`)
+ */
+export class EphemeralIssuerStorageError extends Error {
+  /** Stable machine-readable code, in the style of `CredPortApiError.code`. */
+  readonly code = "ephemeral_issuer_storage";
+
+  constructor() {
+    super(EPHEMERAL_STORAGE_MESSAGE);
+    this.name = "EphemeralIssuerStorageError";
+  }
+}
+
+let warnedInMemoryNode = false;
+
+/**
+ * Pick the best default storage for the current runtime. Browsers get
+ * IndexedDB (with the assertion key encrypted at rest); everything else falls
+ * back to an in-memory map.
+ *
+ * IMPORTANT (server-side): the in-memory fallback does NOT persist across
+ * process restarts, so a Node integrator that relies on it will mint a BRAND
+ * NEW `did:stellar` (and trigger a fresh on-chain registration) on every
+ * restart. Server-side issuers MUST provide a persistent
+ * {@link IssuerIdentityStorage} (KMS, database, encrypted file).
+ *
+ * Calling this yourself and passing the result to the provider counts as an
+ * explicit choice, so it bypasses the {@link EphemeralIssuerStorageError}
+ * guard. The warning below is the only thing standing between that call and a
+ * rotating issuer identity — read it before you silence it.
+ */
+export function autoSelectStorage(): IssuerIdentityStorage {
+  if (isIndexedDbAvailable()) {
+    return new IndexedDbIssuerIdentityStorage();
+  }
+  if (!warnedInMemoryNode && typeof process !== "undefined" && process.versions?.node) {
+    warnedInMemoryNode = true;
+    // eslint-disable-next-line no-console
+    console.warn(
+      "[credport] Using in-memory issuer-identity storage. It is NOT persisted across " +
+        "restarts, so a new did:stellar will be created (and re-registered on-chain) " +
+        "each time the process restarts. Provide a persistent IssuerIdentityStorage " +
+        "for server-side use."
+    );
+  }
+  return new InMemoryIssuerIdentityStorage();
+}
