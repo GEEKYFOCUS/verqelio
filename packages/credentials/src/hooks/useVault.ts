@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCredPortClient } from "../providers/CredPortClientContext";
+import { useVerqelioClient } from "../providers/VerqelioClientContext";
 import { isTxPrepareResponse, isTxSubmitResponse } from "../types/api-responses";
 
 /** Function that signs an unsigned XDR with the given network passphrase. */
@@ -16,7 +16,7 @@ type VaultOwner = string;
  * @returns Methods to manage vault operations via the API.
  */
 export function useVault() {
-  const client = useCredPortClient();
+  const client = useVerqelioClient();
 
   return useMemo(
     () => ({

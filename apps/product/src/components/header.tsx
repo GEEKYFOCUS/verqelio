@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { NavLink } from '@credport/ui/components/nav-link';
+import { NavLink } from '@verqelio/ui/components/nav-link';
 import { MobileMenu } from './mobile-menu';
 import { LocaleSwitcher } from './locale-switcher';
 import { WalletButton } from './wallet-button';
@@ -23,7 +23,7 @@ export async function Header() {
           href="/"
           className="flex items-center gap-2 font-display font-semibold text-foreground"
         >
-          <span className="text-primary">CredPort</span>
+          <span className="text-primary">Verqelio</span>
           <span className="hidden sm:inline text-foreground/70 font-normal text-sm">
             {tCommon('appName')}
           </span>

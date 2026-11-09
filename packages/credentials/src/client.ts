@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { baseURL } from "./types/types";
 import { CreateCredentialPayload } from "./types";
-import { CredPortApiError, normalizeError } from "./errors";
+import { VerqelioApiError, normalizeError } from "./errors";
 import type { SponsoredDidRecordInput } from "./identity/sponsored-did";
 import { IssuerIdentityProvider } from "./identity/provider";
 import { networkFromBaseUrl } from "./utils/network-from-base-url";
@@ -33,20 +33,20 @@ import type {
 } from "./types/api-responses";
 
 /**
- * CredPort SDK HTTP client.
+ * Verqelio SDK HTTP client.
  *
- * Wraps CredPort API endpoints to issue, store, read, and verify credentials,
+ * Wraps Verqelio API endpoints to issue, store, read, and verify credentials,
  * and to prepare transactions. The network is inferred from the `baseURL`.
  */
 /**
  * Optional configuration for the issuer-identity layer.
  *
  * Defaults are safe in a browser (IndexedDB) and deliberately incomplete on a
- * server: with no `storage`, {@link CredPortClient.getOrCreateIssuerIdentity}
+ * server: with no `storage`, {@link VerqelioClient.getOrCreateIssuerIdentity}
  * refuses to register a new DID rather than mint one that the next restart
  * forgets. Supply `storage`, or `allowEphemeralStorage` to accept that.
  */
-export interface CredPortClientIdentityOptions {
+export interface VerqelioClientIdentityOptions {
   /**
    * Custom storage backend for persisted issuer DIDs. Required in practice on
    * a server, where the fallback is an in-memory map — see
@@ -77,7 +77,7 @@ const DEFAULT_TIMEOUT_MS = 30_000;
 /** Default TTL for the cached `/config` response (ms). */
 const DEFAULT_CONFIG_CACHE_TTL_MS = 5 * 60_000;
 
-export class CredPortClient {
+export class VerqelioClient {
   private axios: AxiosInstance;
   private network: "mainnet" | "testnet";
   private configCache: { data: ConfigResponse; expiresAt: number } | null = null;
@@ -86,24 +86,24 @@ export class CredPortClient {
 
   /**
    * Initialize a new client instance.
-   * @param baseURL - Base API URL for CredPort services (mainnet or testnet).
+   * @param baseURL - Base API URL for Verqelio services (mainnet or testnet).
    * @param apiKey - API key for authentication. If not provided, will be read from environment variables.
    * @throws Error if API key is not provided and environment variable is not set for the network.
    *
    * The API key is required and must be provided either as a parameter or via environment variables.
-   * It is automatically configured in the X-CredPort-Key header for all requests.
+   * It is automatically configured in the X-Verqelio-Key header for all requests.
    *
    * API keys are network-specific. Set in your .env file:
-   * - CREDPORT_API_KEY_MAINNET=your-mainnet-api-key (for mainnet)
-   * - CREDPORT_API_KEY_TESTNET=your-testnet-api-key (for testnet)
+   * - VERQELIO_API_KEY_MAINNET=your-mainnet-api-key (for mainnet)
+   * - VERQELIO_API_KEY_TESTNET=your-testnet-api-key (for testnet)
    *
-   * Or use CREDPORT_API_KEY as fallback for both networks:
-   * - CREDPORT_API_KEY=your-api-key (works for both networks)
+   * Or use VERQELIO_API_KEY as fallback for both networks:
+   * - VERQELIO_API_KEY=your-api-key (works for both networks)
    */
   constructor(
     baseURL: baseURL,
     apiKey?: string,
-    identityOptions?: CredPortClientIdentityOptions
+    identityOptions?: VerqelioClientIdentityOptions
   ) {
     this.axios = axios.create({
       baseURL,
@@ -134,23 +134,23 @@ export class CredPortClient {
         : {};
     const networkSpecificKey =
       this.network === "mainnet"
-        ? env.CREDPORT_API_KEY_MAINNET
-        : env.CREDPORT_API_KEY_TESTNET;
+        ? env.VERQELIO_API_KEY_MAINNET
+        : env.VERQELIO_API_KEY_TESTNET;
 
-    const finalApiKey = apiKey || networkSpecificKey || env.CREDPORT_API_KEY;
+    const finalApiKey = apiKey || networkSpecificKey || env.VERQELIO_API_KEY;
 
     if (!finalApiKey || finalApiKey.trim() === "") {
       const networkVar =
         this.network === "mainnet"
-          ? "CREDPORT_API_KEY_MAINNET"
-          : "CREDPORT_API_KEY_TESTNET";
+          ? "VERQELIO_API_KEY_MAINNET"
+          : "VERQELIO_API_KEY_TESTNET";
 
       throw new Error(
         `API key is required for ${this.network}.\n` +
           `Provide it as a parameter or set it in your .env file:\n` +
           `- ${networkVar}=your-${this.network}-api-key (recommended)\n` +
-          `- Or CREDPORT_API_KEY=your-api-key (fallback for both networks)\n\n` +
-          `Get your API key from https://dapp.credport.build, which mints it ` +
+          `- Or VERQELIO_API_KEY=your-api-key (fallback for both networks)\n\n` +
+          `Get your API key from https://dapp.verqelio.example, which mints it ` +
           `against the wallet you sign in with.`
       );
     }
@@ -158,11 +158,11 @@ export class CredPortClient {
     // Configure interceptor to automatically add API key header to all requests
     this.axios.interceptors.request.use((config) => {
       config.headers = config.headers || {};
-      config.headers["X-CredPort-Key"] = finalApiKey.trim();
+      config.headers["X-Verqelio-Key"] = finalApiKey.trim();
       return config;
     });
 
-    // Normalize every failure into a typed `CredPortApiError` so consumers get a
+    // Normalize every failure into a typed `VerqelioApiError` so consumers get a
     // stable `{ status, code, message, requestId }` instead of a raw AxiosError.
     this.axios.interceptors.response.use(
       (response) => response,
@@ -799,7 +799,7 @@ export class CredPortClient {
   }
 
   /**
-   * Read the CredPort contract version string.
+   * Read the Verqelio contract version string.
    * @param args - Optional contract and source configuration
    * @returns `{ version }` with the contract version.
    */
@@ -1045,7 +1045,7 @@ export class CredPortClient {
       | { signedXdr: string }
   ): Promise<DidRegisterSponsoredResponse> {
     if (!(await this.supportsSponsoredDidRegistration())) {
-      throw new CredPortApiError({
+      throw new VerqelioApiError({
         status: 501,
         code: "register_sponsored_unsupported",
         message:

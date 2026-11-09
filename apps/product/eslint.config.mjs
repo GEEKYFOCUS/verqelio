@@ -1,4 +1,4 @@
-import config from '@credport/config/eslint/next';
+import config from '@verqelio/config/eslint/next';
 
 const creditHistoryConfig = [
   ...config,

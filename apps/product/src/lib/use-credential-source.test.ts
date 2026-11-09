@@ -1,20 +1,20 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, renderHook } from '@testing-library/react';
 
-const { getCredentialSource, getDataSourceMode, useCredPortClient, useSession, credportClient, source } =
+const { getCredentialSource, getDataSourceMode, useVerqelioClient, useSession, verqelioClient, source } =
   vi.hoisted(() => ({
     getCredentialSource: vi.fn(),
     getDataSourceMode: vi.fn(),
-    useCredPortClient: vi.fn(),
+    useVerqelioClient: vi.fn(),
     useSession: vi.fn(),
-    credportClient: {},
+    verqelioClient: {},
     source: {},
   }));
 
-vi.mock('@credport/sdk', () => ({
+vi.mock('@verqelio/sdk', () => ({
   getCredentialSource,
   getDataSourceMode,
-  useCredPortClient,
+  useVerqelioClient,
 }));
 
 vi.mock('@/session/session-provider', () => ({ useSession }));
@@ -47,7 +47,7 @@ function disconnectedSession() {
 beforeEach(() => {
   getCredentialSource.mockReset().mockReturnValue(source);
   getDataSourceMode.mockReset();
-  useCredPortClient.mockReset().mockReturnValue(credportClient);
+  useVerqelioClient.mockReset().mockReturnValue(verqelioClient);
   useSession.mockReset();
 });
 
@@ -76,7 +76,7 @@ describe('useCredentialSource', () => {
     expect(getCredentialSource).toHaveBeenCalledWith({
       owner: ADDRESS,
       holderDid: DID,
-      client: credportClient,
+      client: verqelioClient,
     });
   });
 
@@ -90,7 +90,7 @@ describe('useCredentialSource', () => {
     expect(getCredentialSource).toHaveBeenCalledWith({
       owner: undefined,
       holderDid: undefined,
-      client: credportClient,
+      client: verqelioClient,
     });
   });
 });

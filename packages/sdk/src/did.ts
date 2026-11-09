@@ -1,11 +1,11 @@
 /**
  * @fileoverview DID helpers for the did:stellar method.
  *
- * The CredPort DID method is did:stellar:{network}:{G…address}.
+ * The Verqelio DID method is did:stellar:{network}:{G…address}.
  * All previous did:pkh:stellar references have been removed.
  */
 
-/** Stellar networks CredPort currently supports for DID resolution. */
+/** Stellar networks Verqelio currently supports for DID resolution. */
 export type StellarNetwork = 'mainnet' | 'testnet';
 
 export const DID_STELLAR_PREFIX = 'did:stellar';

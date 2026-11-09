@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  transpilePackages: ['@credport/ui', '@credport/sdk', '@credport/types', '@credport/credentials', '@credport/did-stellar'],
+  transpilePackages: ['@verqelio/ui', '@verqelio/sdk', '@verqelio/types', '@verqelio/credentials', '@verqelio/did-stellar'],
 };
 
 export default withNextIntl(nextConfig);

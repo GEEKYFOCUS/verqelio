@@ -16,7 +16,7 @@
 import { Networks, StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { FreighterModule } from '@creit.tech/stellar-wallets-kit/modules/freighter';
 import { Keypair } from '@stellar/stellar-sdk';
-import { sep0053MessageHash } from '@credport/sdk/presentation';
+import { sep0053MessageHash } from '@verqelio/sdk/presentation';
 
 // ── Shared types ──────────────────────────────────────────────────────────────
 

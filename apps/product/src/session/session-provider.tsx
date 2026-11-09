@@ -13,13 +13,13 @@
  *   refresh, which breaks the UX acceptance criterion.
  *
  * Network:
- *   Read from NEXT_PUBLIC_STELLAR_NETWORK (same env var as CredPortProvider).
+ *   Read from NEXT_PUBLIC_STELLAR_NETWORK (same env var as VerqelioProvider).
  *   DID is always derived with didStellar — never constructed by hand.
  */
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { didStellar } from '@credport/sdk/did';
-import type { StellarNetwork } from '@credport/sdk/did';
+import { didStellar } from '@verqelio/sdk/did';
+import type { StellarNetwork } from '@verqelio/sdk/did';
 import { getWalletConnector } from './wallet-connector';
 
 function resolveNetwork(): StellarNetwork {

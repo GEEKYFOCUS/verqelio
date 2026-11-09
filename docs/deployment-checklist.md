@@ -3,8 +3,8 @@
 This is the fastest safe path for a tonight deploy:
 
 1. Supabase for data.
-2. Render or Railway for `@credport/api`.
-3. Vercel for `@credport/product`.
+2. Render or Railway for `@verqelio/api`.
+3. Vercel for `@verqelio/product`.
 4. Upstash Redis only if share links must survive redeploys tonight. Otherwise
    keep the product in mock/memory mode for the first demo deploy.
 
@@ -42,7 +42,7 @@ environment variables.
 
 ### Render
 
-From this `credport` directory, Render can use:
+From this `verqelio` directory, Render can use:
 
 - `render.yaml`
 - `Dockerfile.api`
@@ -75,17 +75,17 @@ Use Node `22.22.1` or any Node `>=22.22.1 <25`.
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm --filter @credport/api build
-pnpm --filter @credport/api start
+pnpm --filter @verqelio/api build
+pnpm --filter @verqelio/api start
 ```
 
 ## 4. Product App Deploy
 
-Deploy to Vercel from the monorepo root (`credport`) with:
+Deploy to Vercel from the monorepo root (`verqelio`) with:
 
 - install command: `pnpm install --frozen-lockfile`
-- build command: `pnpm --filter @credport/product build`
-- dev command: `pnpm --filter @credport/product dev`
+- build command: `pnpm --filter @verqelio/product build`
+- dev command: `pnpm --filter @verqelio/product dev`
 - Node version: `22.x`
 
 Product environment for a safe first deploy:
@@ -116,18 +116,18 @@ After API deploy:
 ```bash
 curl -X POST "$API_BASE_URL/api/keys" \
   -H "Content-Type: application/json" \
-  -H "X-CredPort-Admin-Secret: $ADMIN_BOOTSTRAP_SECRET" \
+  -H "X-Verqelio-Admin-Secret: $ADMIN_BOOTSTRAP_SECRET" \
   -d '{"walletAddress":"G...","label":"Demo key"}'
 ```
 
 Use the returned key as:
 
 ```bash
-NEXT_PUBLIC_CREDPORT_API_KEY=
+NEXT_PUBLIC_VERQELIO_API_KEY=
 NEXT_PUBLIC_DATA_SOURCE=real
 ```
 
-Redeploy the product after adding `NEXT_PUBLIC_CREDPORT_API_KEY`.
+Redeploy the product after adding `NEXT_PUBLIC_VERQELIO_API_KEY`.
 
 ## 6. Final Smoke Checks
 

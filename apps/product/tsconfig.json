@@ -1,5 +1,5 @@
 {
-  "extends": "@credport/config/typescript/nextjs",
+  "extends": "@verqelio/config/typescript/nextjs",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"]

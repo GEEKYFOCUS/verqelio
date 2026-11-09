@@ -1,9 +1,9 @@
-import { useCredPortClient, type CredPortClient } from '@credport/credentials';
+import { useVerqelioClient, type VerqelioClient } from '@verqelio/credentials';
 import type {
   CreditCredential,
   CreditCredentialSource,
   CreditProfileSummary,
-} from '@credport/types';
+} from '@verqelio/types';
 
 /**
  * NOTE ON THE VC → CreditCredential MAPPING BELOW:
@@ -77,37 +77,37 @@ function mapRawVcToCreditCredential(
   };
 }
 
-export interface CredPortCredentialSourceOptions {
+export interface VerqelioCredentialSourceOptions {
   /** Stellar G... address of the connected holder whose vault to read. */
   owner: string;
   /**
    * Full did:stellar for the holder, when the caller already has it
    * (e.g. from useSession()). Optional — falls back to '' when omitted,
-   * since CredPortCredentialSource has no network context of its own to derive
+   * since VerqelioCredentialSource has no network context of its own to derive
    * one from owner alone.
    */
   holderDid?: string;
   /**
-   * Pre-resolved CredPort SDK client. Pass this when the source is constructed
+   * Pre-resolved Verqelio SDK client. Pass this when the source is constructed
    * outside of React render (e.g. the public verifier builds it inside an
-   * effect), since `useCredPortClient()` is a hook and may only run during render.
-   * When omitted, the client is read from context via `useCredPortClient()`, which
-   * requires the constructor to run during render inside an `CredPortConfig`.
+   * effect), since `useVerqelioClient()` is a hook and may only run during render.
+   * When omitted, the client is read from context via `useVerqelioClient()`, which
+   * requires the constructor to run during render inside an `VerqelioConfig`.
    */
-  client?: CredPortClient;
+  client?: VerqelioClient;
 }
 
-export class CredPortCredentialSource implements CreditCredentialSource {
+export class VerqelioCredentialSource implements CreditCredentialSource {
   private readonly owner: string;
   private readonly holderDid: string;
-  private readonly client: CredPortClient;
+  private readonly client: VerqelioClient;
 
-  constructor({ owner, holderDid = '', client }: CredPortCredentialSourceOptions) {
+  constructor({ owner, holderDid = '', client }: VerqelioCredentialSourceOptions) {
     this.owner = owner;
     this.holderDid = holderDid;
     // Prefer the injected client; `??` short-circuits so the hook is only called
     // when no client was provided (render-time callers keep working unchanged).
-    this.client = client ?? useCredPortClient();
+    this.client = client ?? useVerqelioClient();
   }
 
   async listCredentials(): Promise<CreditCredential[]> {

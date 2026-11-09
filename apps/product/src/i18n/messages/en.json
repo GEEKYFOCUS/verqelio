@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Credit Passport — CredPort",
-    "description": "Portable credit history for financial inclusion, built on CredPort verifiable credentials."
+    "title": "Credit Passport — Verqelio",
+    "description": "Portable credit history for financial inclusion, built on Verqelio verifiable credentials."
   },
   "nav": {
     "home": "Home",
@@ -15,7 +15,7 @@
     "localeEs": "Español"
   },
   "footer": {
-    "tagline": "Portable credit history built on CredPort verifiable credentials.",
+    "tagline": "Portable credit history built on Verqelio verifiable credentials.",
     "rights": "All rights reserved."
   },
   "common": {
@@ -26,8 +26,8 @@
   },
   "home": {
     "title": "Credit History",
-    "description": "Portable credit history built on CredPort verifiable credentials. Product skeleton — nothing implemented yet.",
-    "protocol": "CredPort Protocol",
+    "description": "Portable credit history built on Verqelio verifiable credentials. Product skeleton — nothing implemented yet.",
+    "protocol": "Verqelio Protocol",
     "subtitle": "Own, manage, and share your verifiable credit reputation. Port your financial history securely without relying on centralized credit bureaus.",
     "shareTitle": "Generate Presentation",
     "shareDesc": "Select credit credentials and create a secure, verifiable link to share with lenders.",
@@ -224,7 +224,7 @@
     "selectAll": "Select All",
     "value": "Value:",
     "issuer": "Issuer:",
-    "vaultTitle": "CredPort Credit Vault",
+    "vaultTitle": "Verqelio Credit Vault",
     "revoked": "Revoked",
     "valid": "Valid",
     "noHolder": "Connect your wallet to generate a presentation link.",
@@ -232,7 +232,7 @@
   },
   "verify": {
     "title": "Verifiable presentation report",
-    "subtitle": "Cryptographically verified via CredPort on the Stellar network",
+    "subtitle": "Cryptographically verified via Verqelio on the Stellar network",
     "loading": "Running cryptographic verification…",
     "holderInfo": "Holder details",
     "holderName": "Holder name",

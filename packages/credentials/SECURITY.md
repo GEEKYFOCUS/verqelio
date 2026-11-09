@@ -1,7 +1,7 @@
 # Security Policy
 
-This repository publishes **`@credport/credentials`**, the React/TypeScript
-SDK integrators install to issue and verify credentials through CredPort. A
+This repository publishes **`@verqelio/credentials`**, the React/TypeScript
+SDK integrators install to issue and verify credentials through Verqelio. A
 vulnerability here ships to every application that depends on it, so we treat
 supply-chain integrity as the primary concern.
 
@@ -22,7 +22,7 @@ ships, `1.1.x` will receive security fixes for 90 days after that release.
 **In scope**
 
 - The SDK sending an API key, secret, or credential payload anywhere other
-  than the configured CredPort API host
+  than the configured Verqelio API host
 - Signing helpers producing or transmitting a private key
 - The SDK returning "verified" for a credential that is revoked, expired, or
   not actually valid
@@ -35,16 +35,16 @@ ships, `1.1.x` will receive security fixes for 90 days after that release.
 
 **Out of scope**
 
-- Vulnerabilities in the CredPort API itself — report those to
-  **credport.xyz@gmail.com**, they are handled under the `credport-api` policy
+- Vulnerabilities in the Verqelio API itself — report those to
+  **security@verqelio.example**, they are handled under the `verqelio-api` policy
 - Advisories in `devDependencies` with no path into the published bundle.
   Tell us anyway, but they are not treated as SDK vulnerabilities
 - Misuse by an integrating application, such as embedding an API key in
   client-side code shipped to end users. See the note below
 - Vulnerabilities in the Soroban contracts — report those against
-  [contracts-credport](https://github.com/CredPort-Team/contracts-credport)
+  [contracts-verqelio](https://github.com/Verqelio-Team/contracts-verqelio)
 
-**Note on API keys:** an CredPort API key is a server-side secret. The SDK cannot
+**Note on API keys:** an Verqelio API key is a server-side secret. The SDK cannot
 protect a key an application chooses to ship to the browser. That is an
 integration mistake rather than an SDK vulnerability — but if you find our
 own documentation or examples encouraging it, that *is* in scope and we want
@@ -55,9 +55,9 @@ to know.
 **Do not open a public issue for a security report.**
 
 Use GitHub's private reporting:
-[**Report a vulnerability**](https://github.com/CredPort-Team/credport-credentials/security/advisories/new)
+[**Report a vulnerability**](https://github.com/Verqelio-Team/verqelio-credentials/security/advisories/new)
 
-If you cannot use that form, email **credport.xyz@gmail.com** with `SECURITY` in
+If you cannot use that form, email **security@verqelio.example** with `SECURITY` in
 the subject.
 
 Please include:

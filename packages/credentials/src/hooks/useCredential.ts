@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCredPortClient } from "../providers/CredPortClientContext";
+import { useVerqelioClient } from "../providers/VerqelioClientContext";
 import { isTxPrepareResponse, isTxSubmitResponse } from "../types/api-responses";
 import { normalizeDid, ensureContextInVcData } from "../utils/credential-helpers";
 
@@ -17,7 +17,7 @@ type VaultOwner = string;
  * @returns Methods to manage credentials via the API.
  */
 export function useCredential() {
-  const client = useCredPortClient();
+  const client = useVerqelioClient();
 
   return useMemo(
     () => ({
@@ -41,7 +41,7 @@ export function useCredential() {
       /**
        * Issuer DID. **Optional.** When omitted, the SDK transparently
        * gets-or-creates a `did:stellar` for `issuer` via
-       * {@link CredPortClient.getOrCreateIssuerIdentity}, using
+       * {@link VerqelioClient.getOrCreateIssuerIdentity}, using
        * `signTransaction` to authorize the on-chain registration the
        * first time. Subsequent calls reuse the persisted DID.
        *

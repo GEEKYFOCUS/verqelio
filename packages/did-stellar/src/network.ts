@@ -17,11 +17,11 @@ export const DEFAULT_RPC_URLS: Readonly<Record<NetworkType, string>> = Object.fr
   testnet: 'https://soroban-testnet.stellar.org',
 });
 
-/** Canonical `did-stellar-registry` contract IDs deployed by the CredPort team. */
+/** Upstream ACTA `did-stellar-registry` deployments; unchanged by the product rename. */
 export const DEFAULT_REGISTRY_CONTRACT_IDS: Readonly<Record<NetworkType, string>> = Object.freeze({
-  // Mainnet deploy: see contracts-credport/docs/deployments/mainnet.md
+  // Mainnet deploy: see contracts-verqelio/docs/deployments/mainnet.md
   mainnet: 'CD6LSWW5ZSXOO5WAIHKQLQ262TW7BPI37PNEVMMA273BAPC65NN2AYXQ',
-  // Tranche 1 deployment: see contracts-credport/docs/deployments/testnet.md
+  // Tranche 1 deployment: see contracts-verqelio/docs/deployments/testnet.md
   testnet: 'CB7ATU7SF5QUKJMSULJDJVWJZVDXC23HTZX6NFUDTSFPVT6MA575NNZJ',
 });
 

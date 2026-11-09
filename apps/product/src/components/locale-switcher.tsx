@@ -6,7 +6,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Globe } from 'lucide-react';
 import { setLocale } from '@/actions/locale';
 import type { Locale } from '@/i18n/config';
-import { cn } from '@credport/ui';
+import { cn } from '@verqelio/ui';
 
 const localeOptions: { value: Locale; code: string; labelKey: 'localeEn' | 'localeEs' }[] = [
   { value: 'en', code: 'EN', labelKey: 'localeEn' },

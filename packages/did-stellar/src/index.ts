@@ -1,8 +1,8 @@
 /**
- * `@credport/did-stellar` — official TypeScript SDK for the
+ * `@verqelio/did-stellar` — official TypeScript SDK for the
  * `did:stellar` v0.1 DID method.
  *
- * See https://github.com/CredPort-Team/contracts-credport/blob/main/docs/did-spec/did-stellar-v0.1.md
+ * See https://github.com/Verqelio-Team/contracts-verqelio/blob/main/docs/did-spec/did-stellar-v0.1.md
  * for the normative method spec.
  */
 
@@ -122,8 +122,8 @@ export type {
 } from './proof-of-control';
 
 // --- HTTP Client ------------------------------------------------------------
-export { CredPortDidClient } from './http-client';
-export type { CredPortDidClientOptions, DidMutationResponse, DidRecordResponse } from './http-client';
+export { VerqelioDidClient } from './http-client';
+export type { VerqelioDidClientOptions, DidMutationResponse, DidRecordResponse } from './http-client';
 
 // --- Address helpers --------------------------------------------------------
 export { isValidAddress } from './utils/address';

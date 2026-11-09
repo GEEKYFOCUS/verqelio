@@ -1,5 +1,5 @@
 /**
- * Lightweight stand-ins for `@credport/ui` used in component tests.
+ * Lightweight stand-ins for `@verqelio/ui` used in component tests.
  *
  * The shared design system is consumed from source and pulls in radix-ui / cva,
  * which is irrelevant to the view *state logic* under test (loading / empty /
@@ -8,7 +8,7 @@
  * Each stub renders its text-bearing props (title/description/label) and
  * children so assertions can find copy; `Button` renders a real <button> so
  * role queries work. Wire it up with:
- *   vi.mock('@credport/ui', () => import('@/test/ui-mock'));
+ *   vi.mock('@verqelio/ui', () => import('@/test/ui-mock'));
  */
 import * as React from 'react';
 

@@ -3,9 +3,9 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
-import { getCredentialSource, parseDidStellar, useCredPortClient } from '@credport/sdk';
-import type { CreditCredential, CreditProfileSummary } from '@credport/sdk/types';
-import type { ProofVerification } from '@credport/sdk/presentation';
+import { getCredentialSource, parseDidStellar, useVerqelioClient } from '@verqelio/sdk';
+import type { CreditCredential, CreditProfileSummary } from '@verqelio/sdk/types';
+import type { ProofVerification } from '@verqelio/sdk/presentation';
 import {
   AttributionNote,
   Button,
@@ -20,7 +20,7 @@ import {
   VerificationBanner,
   type AttributionStatus,
   type CredentialStatusKind,
-} from '@credport/ui';
+} from '@verqelio/ui';
 import { ShieldAlert } from 'lucide-react';
 import {
   categoryOf,
@@ -114,10 +114,10 @@ export function PublicVerificationView({ token }: PublicVerificationViewProps) {
 
   const [state, setState] = React.useState<LoadState>({ phase: 'loading' });
 
-  // The CredPort SDK client is only obtainable via this hook (React context), so we
+  // The Verqelio SDK client is only obtainable via this hook (React context), so we
   // read it at render and hand it to the credential source inside the effect —
   // `getCredentialSource` cannot call the hook from within an async callback.
-  const credportClient = useCredPortClient();
+  const verqelioClient = useVerqelioClient();
 
   const formatOptions = React.useMemo(
     () => ({
@@ -175,8 +175,8 @@ export function PublicVerificationView({ token }: PublicVerificationViewProps) {
         // falls back to mock in that case. Still pass an options object (never
         // call with zero arguments) so the no-bare-call regression check holds.
         const source = owner
-          ? getCredentialSource({ owner, holderDid: presentation.holder, client: credportClient })
-          : getCredentialSource({ client: credportClient });
+          ? getCredentialSource({ owner, holderDid: presentation.holder, client: verqelioClient })
+          : getCredentialSource({ client: verqelioClient });
 
         const [profile, resolved] = await Promise.all([
           source.getProfileSummary(),
@@ -218,7 +218,7 @@ export function PublicVerificationView({ token }: PublicVerificationViewProps) {
     return () => {
       cancelled = true;
     };
-  }, [token, credportClient]);
+  }, [token, verqelioClient]);
 
   return (
     <section className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 md:py-14">

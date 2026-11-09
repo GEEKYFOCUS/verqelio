@@ -7,12 +7,12 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Keypair } from '@stellar/stellar-sdk';
-import { didStellar } from '@credport/sdk/did';
+import { didStellar } from '@verqelio/sdk/did';
 import {
   InvalidPresentationError,
   sep0053MessageHash,
   type HolderActionProof,
-} from '@credport/sdk/presentation';
+} from '@verqelio/sdk/presentation';
 import {
   createPresentationRef,
   createStoredPresentation,

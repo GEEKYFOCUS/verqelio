@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { CredPortProvider } from '@/providers/credport-provider';
+import { VerqelioProvider } from '@/providers/verqelio-provider';
 import { SessionProvider } from '@/session/session-provider';
 import './globals.css';
 
@@ -50,20 +50,20 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {/*
-           * CredPortProvider: mounts CredPortConfig as low as possible — inside
+           * VerqelioProvider: mounts VerqelioConfig as low as possible — inside
            * NextIntlClientProvider but outside the page content, so only
-           * components that need the CredPort client context are affected.
+           * components that need the Verqelio client context are affected.
            *
            * SessionProvider: wraps the shell so the header's WalletButton
            * and any page-level session gating can both access useSession().
            */}
-          <CredPortProvider>
+          <VerqelioProvider>
             <SessionProvider>
               <Header />
               <main className="flex flex-1 flex-col">{children}</main>
               <Footer />
             </SessionProvider>
-          </CredPortProvider>
+          </VerqelioProvider>
         </NextIntlClientProvider>
       </body>
     </html>

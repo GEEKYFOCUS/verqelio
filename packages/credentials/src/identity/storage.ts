@@ -5,7 +5,7 @@
  *   environments and as a fallback when no other backend is configured.
  * - `IndexedDbIssuerIdentityStorage` — browser-only, persists across tabs and
  *   reloads. The Ed25519 assertion private key is encrypted at rest with
- *   AES-256-GCM using a **non-extrcredportble** WebCrypto key kept in IndexedDB, so
+ *   AES-256-GCM using a **non-extractable** WebCrypto key kept in IndexedDB, so
  *   the raw key never sits in the database in plaintext. (Note: this defends
  *   against passive exfiltration — backups, another origin, dev-tools dumps —
  *   but an attacker running code on the same origin, e.g. via XSS, can still
@@ -128,6 +128,7 @@ async function decryptField(
  * first or use {@link autoSelectStorage}.
  */
 export class IndexedDbIssuerIdentityStorage implements IssuerIdentityStorage {
+  // Keep the existing database name so the rebrand cannot orphan signing keys.
   private static readonly DB_NAME = "credport-issuer-identity";
   private static readonly STORE_NAME = "identities";
   private static readonly KEY_STORE_NAME = "crypto-keys";
@@ -238,7 +239,7 @@ export class IndexedDbIssuerIdentityStorage implements IssuerIdentityStorage {
     });
     if (existing) return existing;
 
-    // Non-extrcredportble: the key cannot be exported/exfiltrated, only used.
+    // Non-extractable: the key cannot be exported/exfiltrated, only used.
     const key = await s.generateKey({ name: "AES-GCM", length: 256 }, false, [
       "encrypt",
       "decrypt",
@@ -258,7 +259,7 @@ export class IndexedDbIssuerIdentityStorage implements IssuerIdentityStorage {
     IndexedDbIssuerIdentityStorage.warnedNoCrypto = true;
     // eslint-disable-next-line no-console
     console.warn(
-      "[credport] WebCrypto (crypto.subtle) is unavailable; the issuer private key " +
+      "[verqelio] WebCrypto (crypto.subtle) is unavailable; the issuer private key " +
         "will be stored WITHOUT at-rest encryption. Serve the app over HTTPS/localhost."
     );
   }
@@ -297,7 +298,7 @@ export function isIndexedDbAvailable(): boolean {
 }
 
 /** Body of {@link EphemeralIssuerStorageError}: what broke, and both ways out. */
-const EPHEMERAL_STORAGE_MESSAGE = `[credport] Refusing to register a new did:stellar on ephemeral issuer-identity storage.
+const EPHEMERAL_STORAGE_MESSAGE = `[verqelio] Refusing to register a new did:stellar on ephemeral issuer-identity storage.
 
 No \`storage\` was configured, so the SDK fell back to an in-memory map that is lost when
 this process exits. Registering here mints a NEW DID and a NEW signing key on every
@@ -306,7 +307,7 @@ DID this issuer no longer uses.
 
 Pass a persistent IssuerIdentityStorage:
 
-  new CredPortClient(url, apiKey, { storage: myStorage })
+  new VerqelioClient(url, apiKey, { storage: myStorage })
 
 \`myStorage\` implements two methods — get(controller, network) and set(identity, network)
 — over your database, a KMS, or an encrypted file. The identity holds private keys:
@@ -315,7 +316,7 @@ encrypt it at rest.
 If an identity that dies with the process is what you actually want (tests, throwaway
 demos), say so explicitly:
 
-  new CredPortClient(url, apiKey, { allowEphemeralStorage: true })`;
+  new VerqelioClient(url, apiKey, { allowEphemeralStorage: true })`;
 
 /**
  * Thrown when the SDK is asked to register a new `did:stellar` while the
@@ -335,7 +336,7 @@ demos), say so explicitly:
  *     ephemeral backend explicitly (e.g. `new InMemoryIssuerIdentityStorage()`)
  */
 export class EphemeralIssuerStorageError extends Error {
-  /** Stable machine-readable code, in the style of `CredPortApiError.code`. */
+  /** Stable machine-readable code, in the style of `VerqelioApiError.code`. */
   readonly code = "ephemeral_issuer_storage";
 
   constructor() {
@@ -370,7 +371,7 @@ export function autoSelectStorage(): IssuerIdentityStorage {
     warnedInMemoryNode = true;
     // eslint-disable-next-line no-console
     console.warn(
-      "[credport] Using in-memory issuer-identity storage. It is NOT persisted across " +
+      "[verqelio] Using in-memory issuer-identity storage. It is NOT persisted across " +
         "restarts, so a new did:stellar will be created (and re-registered on-chain) " +
         "each time the process restarts. Provide a persistent IssuerIdentityStorage " +
         "for server-side use."

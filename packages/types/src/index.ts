@@ -1,5 +1,5 @@
 /**
- * Shared types used across CredPort products. Keep this package free of runtime
+ * Shared types used across Verqelio products. Keep this package free of runtime
  * code and external dependencies.
  */
 

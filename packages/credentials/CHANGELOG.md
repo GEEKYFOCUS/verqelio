@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@credport/credentials` are documented in this file.
+All notable changes to `@verqelio/credentials` are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -26,7 +26,7 @@ before any RPC call, unless the volatile backend was actually asked for.
 ### Added
 
 - `EphemeralIssuerStorageError` (`code: "ephemeral_issuer_storage"`), thrown by
-  `IssuerIdentityProvider.getOrCreate` / `CredPortClient.getOrCreateIssuerIdentity`
+  `IssuerIdentityProvider.getOrCreate` / `VerqelioClient.getOrCreateIssuerIdentity`
   when a new DID would be registered against storage the SDK itself fell back
   to and that cannot survive a restart. The message spells out both fixes.
 - `IssuerIdentityStorage.isEphemeral?: boolean` — a backend declares that it
@@ -34,7 +34,7 @@ before any RPC call, unless the volatile backend was actually asked for.
   Optional, so existing custom backends stay durable-by-default and compile
   unchanged.
 - `allowEphemeralStorage?: boolean` on `IssuerIdentityProviderOptions` and
-  `CredPortClientIdentityOptions` — opt into a disposable identity for tests,
+  `VerqelioClientIdentityOptions` — opt into a disposable identity for tests,
   demos, and short-lived scripts.
 
 ### Changed
@@ -54,7 +54,7 @@ Backward compatible. Purely additive: no existing method changes behaviour,
 and the self-service issuer-DID onboarding path is untouched.
 
 Adds support for `did-stellar-registry.register_sponsored` (registry v0.3.0,
-contracts-credport#82) via the API's new
+contracts-verqelio#82) via the API's new
 `POST /contracts/did/register-sponsored`. An organisation pays for a user's
 DID without ever controlling it: only the sponsor signs, and
 `record.controller` owns the DID from version 1, so the payer never holds
@@ -66,9 +66,9 @@ than burning a round-trip. Mainnet behaviour is otherwise unchanged.
 
 ### Added
 
-- `CredPortClient.registerSponsoredDid(payload)` — prepare/submit like every other
+- `VerqelioClient.registerSponsoredDid(payload)` — prepare/submit like every other
   write.
-- `CredPortClient.supportsSponsoredDidRegistration()` — reads the cached
+- `VerqelioClient.supportsSponsoredDidRegistration()` — reads the cached
   `/config` capability flag, falling back to the network name on API versions
   that predate it.
 - `useSponsoredDid()` hook: `registerSponsored` (prepare → sign → submit,
@@ -103,7 +103,7 @@ Backward compatible.
   to double as the registration transaction source. The controller may now be
   a Soroban contract / smart account (`C...`), not only a classic account
   (`G...`), matching the `did-stellar-registry` contract's `Address` type and
-  `@credport/did-stellar` >= 0.1.2.
+  `@verqelio/did-stellar` >= 0.1.2.
 - When `controller` is a contract (`C...`), a separate `sourcePublicKey` (a
   funded classic `G...` account or relayer public key) is now REQUIRED, since
   a contract cannot be the classic source that funds/signs the envelope. For a
@@ -124,18 +124,18 @@ scheduled for the next major).
 - Hooks (`useVault`, `useCredential`, `useVaultRead`) now return a **stable,
   memoized** object (`useMemo([client])`) instead of a fresh one every render,
   so their methods are safe to use in effect/callback dependency arrays.
-- `CredPortConfig` recreates the client when `baseURL`/`apiKey` change (was frozen
+- `VerqelioConfig` recreates the client when `baseURL`/`apiKey` change (was frozen
   after first render), so switching network at runtime takes effect.
 
 ### Added
 
-- **`CredPortApiError`**: every client request now rejects with a normalized error
+- **`VerqelioApiError`**: every client request now rejects with a normalized error
   (`status`, `code`, `message`, `requestId`, `isTimeout`, `isNetworkError`)
   instead of a raw `AxiosError`. Exported alongside `normalizeError`.
 - HTTP client now has a **30s default timeout** (configurable via
   `identityOptions.timeoutMs`).
 - **At-rest encryption** of the Ed25519 assertion private key in the default
-  IndexedDB storage (AES-256-GCM with a non-extrcredportble WebCrypto key). Legacy
+  IndexedDB storage (AES-256-GCM with a non-extractable WebCrypto key). Legacy
   plaintext records are still read transparently.
 - `client.clearConfigCache()` and a **TTL** on the `/config` cache (default 5
   min, configurable via `identityOptions.configCacheTtlMs`) — a rotated
@@ -152,7 +152,7 @@ scheduled for the next major).
 - In-memory issuer storage now logs a warning in Node, since it does not persist
   across restarts (each restart would mint a new DID). Provide a persistent
   `IssuerIdentityStorage` server-side.
-- `CredPortConfigProps.children` typed as `React.ReactNode` (was `any`).
+- `VerqelioConfigProps.children` typed as `React.ReactNode` (was `any`).
 
 ### Deprecated
 
@@ -225,4 +225,4 @@ owner's vault address server-side, so the surface changes are focused.
 - A few now-unused response types (`VcIssueLinkedResponse`,
   `VaultGetVcParentResponse`, `VaultVcParentInfo`) remain exported and are
   harmless; they will be pruned in a later cleanup.
-- Requires `credport-api` v1.1.1.
+- Requires `verqelio-api` v1.1.1.

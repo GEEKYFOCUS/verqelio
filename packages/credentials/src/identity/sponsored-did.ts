@@ -4,7 +4,7 @@
  * An organisation pays for a user's DID without ever controlling it. Only the
  * sponsor signs; `record.controller` owns the DID from version 1, so the payer
  * never holds custody. Backed by `did-stellar-registry.register_sponsored`
- * (registry v0.3.0, contracts-credport#82) through
+ * (registry v0.3.0, contracts-verqelio#82) through
  * `POST /contracts/did/register-sponsored`.
  *
  * **Testnet only.** Mainnet still runs registry v0.2.0, where the entrypoint
@@ -36,7 +36,7 @@ import {
   buildDidStellar,
   encodeMultikey,
   generateDidId,
-} from "@credport/did-stellar";
+} from "@verqelio/did-stellar";
 
 /** Single public-key entry, in W3C Multikey form. */
 export interface SponsoredDidKey {

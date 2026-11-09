@@ -1,8 +1,8 @@
 {
-  "name": "credport",
+  "name": "verqelio",
   "version": "0.1.0",
   "private": true,
-  "description": "CredPort monorepo: portable verifiable credentials, product app, API, SDK, and Soroban contracts.",
+  "description": "Verqelio monorepo: portable verifiable credentials, product app, API, SDK, and Soroban contracts.",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

@@ -1,10 +1,10 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import type { CredentialStatusKind } from '@credport/ui';
-import { Button, cn } from '@credport/ui';
+import type { CredentialStatusKind } from '@verqelio/ui';
+import { Button, cn } from '@verqelio/ui';
 import { X } from 'lucide-react';
-import type { CreditCategory } from '@credport/sdk/types';
+import type { CreditCategory } from '@verqelio/sdk/types';
 import { CREDIT_CATEGORIES, CREDENTIAL_STATUSES } from '@/lib/credentials';
 
 export type CategoryFilter = CreditCategory | 'all';

@@ -1,24 +1,24 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, screen } from '@testing-library/react';
-import type { CreditCredential, CreditProfileSummary } from '@credport/sdk/types';
+import type { CreditCredential, CreditProfileSummary } from '@verqelio/sdk/types';
 import { renderWithIntl } from '@/test/render-with-intl';
 
-const { getCredentialSource, getProfileSummary, listCredentials, useSession, credportClient } =
+const { getCredentialSource, getProfileSummary, listCredentials, useSession, verqelioClient } =
   vi.hoisted(() => ({
     getCredentialSource: vi.fn(),
     getProfileSummary: vi.fn(),
     listCredentials: vi.fn(),
     useSession: vi.fn(),
-    // Stable reference, mirroring the memoized CredPortConfig context in the app —
+    // Stable reference, mirroring the memoized VerqelioConfig context in the app —
     // an unstable client would retrigger the load effect on every render.
-    credportClient: {},
+    verqelioClient: {},
   }));
 
-vi.mock('@credport/ui', () => import('@/test/ui-mock'));
+vi.mock('@verqelio/ui', () => import('@/test/ui-mock'));
 
-vi.mock('@credport/sdk', () => ({
+vi.mock('@verqelio/sdk', () => ({
   getCredentialSource,
-  useCredPortClient: () => credportClient,
+  useVerqelioClient: () => verqelioClient,
 }));
 
 vi.mock('@/session/session-provider', () => ({ useSession }));

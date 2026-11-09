@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, screen } from '@testing-library/react';
-import type { CreditCredential, CreditProfileSummary } from '@credport/sdk/types';
-import { buildPresentation, type ProofVerification } from '@credport/sdk/presentation';
+import type { CreditCredential, CreditProfileSummary } from '@verqelio/sdk/types';
+import { buildPresentation, type ProofVerification } from '@verqelio/sdk/presentation';
 import { renderWithIntl } from '@/test/render-with-intl';
 
 const { getCredential, getProfileSummary, resolvePresentationRef } = vi.hoisted(() => ({
@@ -10,15 +10,15 @@ const { getCredential, getProfileSummary, resolvePresentationRef } = vi.hoisted(
   resolvePresentationRef: vi.fn(),
 }));
 
-vi.mock('@credport/ui', () => import('@/test/ui-mock'));
+vi.mock('@verqelio/ui', () => import('@/test/ui-mock'));
 
-vi.mock('@credport/sdk', async () => {
+vi.mock('@verqelio/sdk', async () => {
   // Keep the real parseDidStellar so the view derives the owner as in production;
   // only the SDK client and credential source are stubbed.
-  const actual = await vi.importActual<typeof import('@credport/sdk')>('@credport/sdk');
+  const actual = await vi.importActual<typeof import('@verqelio/sdk')>('@verqelio/sdk');
   return {
     parseDidStellar: actual.parseDidStellar,
-    useCredPortClient: () => ({}),
+    useVerqelioClient: () => ({}),
     getCredentialSource: () => ({ getCredential, getProfileSummary }),
   };
 });

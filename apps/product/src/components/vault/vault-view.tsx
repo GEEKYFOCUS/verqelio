@@ -3,8 +3,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useFormatter, useTranslations } from 'next-intl';
-import { getCredentialSource, useCredPortClient } from '@credport/sdk';
-import type { CreditCredential, CreditProfileSummary } from '@credport/sdk/types';
+import { getCredentialSource, useVerqelioClient } from '@verqelio/sdk';
+import type { CreditCredential, CreditProfileSummary } from '@verqelio/sdk/types';
 import {
   Button,
   Card,
@@ -14,7 +14,7 @@ import {
   ProfileSummaryCard,
   Skeleton,
   StatePanel,
-} from '@credport/ui';
+} from '@verqelio/ui';
 import { AlertCircle, ArrowRight, Inbox, RefreshCw, Wallet } from 'lucide-react';
 import { useSession } from '@/session/session-provider';
 import { CREDIT_CATEGORIES } from '@/lib/credentials';
@@ -40,11 +40,11 @@ export function VaultView() {
   const tSession = useTranslations('session');
 
   const { status, address, did, connect } = useSession();
-  // The CredPort SDK client comes from React context, so it must be read at render
+  // The Verqelio SDK client comes from React context, so it must be read at render
   // and handed to the credential source inside the effect (the hook cannot run
   // in an async callback). The dashboard is session-gated, so the vault owner
   // (G… address) is available directly from the session — no DID parsing needed.
-  const credportClient = useCredPortClient();
+  const verqelioClient = useVerqelioClient();
 
   const [state, setState] = React.useState<LoadState>({ phase: 'loading' });
   const [reloadKey, setReloadKey] = React.useState(0);
@@ -57,7 +57,7 @@ export function VaultView() {
     const source = getCredentialSource({
       owner: address,
       holderDid: did ?? undefined,
-      client: credportClient,
+      client: verqelioClient,
     });
 
     Promise.all([source.getProfileSummary(), source.listCredentials()])
@@ -72,7 +72,7 @@ export function VaultView() {
     return () => {
       cancelled = true;
     };
-  }, [status, address, did, credportClient, reloadKey]);
+  }, [status, address, did, verqelioClient, reloadKey]);
 
   const retry = () => {
     setState({ phase: 'loading' });

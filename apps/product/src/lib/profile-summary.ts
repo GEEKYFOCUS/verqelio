@@ -1,4 +1,4 @@
-import type { CreditCategory, CreditCredential } from '@credport/sdk/types';
+import type { CreditCategory, CreditCredential } from '@verqelio/sdk/types';
 import { CREDIT_CATEGORIES, categoryOf, statusKindOf } from './credentials';
 
 /**

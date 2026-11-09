@@ -1,4 +1,4 @@
-import { CredPortApiError, normalizeError } from "../src/errors";
+import { VerqelioApiError, normalizeError } from "../src/errors";
 
 describe("normalizeError", () => {
   it("maps an API error response to code/message/requestId", () => {
@@ -11,7 +11,7 @@ describe("normalizeError", () => {
       },
     };
     const e = normalizeError(axiosErr);
-    expect(e).toBeInstanceOf(CredPortApiError);
+    expect(e).toBeInstanceOf(VerqelioApiError);
     expect(e.status).toBe(409);
     expect(e.code).toBe("vc_already_exists");
     expect(e.message).toBe("VC exists");
@@ -32,8 +32,8 @@ describe("normalizeError", () => {
     expect(e.isNetworkError).toBe(true);
   });
 
-  it("passes an existing CredPortApiError through unchanged", () => {
-    const original = new CredPortApiError({ status: 400, code: "bad", message: "bad" });
+  it("passes an existing VerqelioApiError through unchanged", () => {
+    const original = new VerqelioApiError({ status: 400, code: "bad", message: "bad" });
     expect(normalizeError(original)).toBe(original);
   });
 

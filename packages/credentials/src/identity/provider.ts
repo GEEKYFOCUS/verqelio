@@ -4,7 +4,7 @@
  *
  * The first time it's asked for an identity for a given controller, it:
  *  1. Generates two fresh Ed25519 keypairs using `@noble/ed25519`.
- *  2. Encodes both public keys as Multikey via `@credport/did-stellar`.
+ *  2. Encodes both public keys as Multikey via `@verqelio/did-stellar`.
  *  3. Builds a `DidRecord` with one key in `authentication` and a
  *     DISTINCT key in `assertionMethod`. The registry enforces that a key
  *     appears in at most one verification relationship, so reusing a single
@@ -30,7 +30,7 @@ import {
   generateDidId,
   prepareRegisterDidXdr,
   submitSignedXdr,
-} from "@credport/did-stellar";
+} from "@verqelio/did-stellar";
 
 import { autoSelectStorage, EphemeralIssuerStorageError } from "./storage";
 
@@ -131,7 +131,7 @@ export class IssuerIdentityProvider {
    * needed.
    *
    * Resolved lazily on purpose: `autoSelectStorage()` warns when it falls
-   * back to the in-memory map, and `CredPortClient` builds a provider for every
+   * back to the in-memory map, and `VerqelioClient` builds a provider for every
    * consumer — including the many that only verify credentials and never
    * touch an issuer identity. Selecting eagerly would fire that warning at
    * them, and a warning everyone learns to ignore protects nobody.

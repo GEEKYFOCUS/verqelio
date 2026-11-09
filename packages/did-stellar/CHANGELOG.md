@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `@credport/did-stellar` are documented in this file.
+All notable changes to `@verqelio/did-stellar` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this project adheres to [Semantic Versioning](https://semver.org/).
 
@@ -18,7 +18,7 @@ this project adheres to [Semantic Versioning](https://semver.org/).
   the registry's Soroban `Address` type.
 
 Both exist because the new
-[`@credport/did-stellar-indexer`](../indexer) needs them, and both are useful
+[`@verqelio/did-stellar-indexer`](../indexer) needs them, and both are useful
 to anyone building an indexer or a wallet UI over the registry. No behavioural
 change to existing exports.
 
@@ -84,7 +84,7 @@ surface against `did-stellar-registry` v0.1.0 (testnet contract
 - **Proof of control** — `jcsCanonicalize` (RFC 8785),
   `buildChallenge`, `verifyProofOfControl` with timestamp + nonce +
   domain checks per spec §6.5 / §7.5.
-- **HTTP client** — optional `CredPortDidClient` for [`did.credport.build`](https://did.credport.build).
+- **HTTP client** — optional `VerqelioDidClient` for [`did.verqelio.example`](https://did.verqelio.example).
 - **React hook** — `useDid()` exposed via `./hooks` subpath.
 - **Typed errors** — `DidError` + `DidErrorCode` covering every
   `RegistryError` plus transport and client-side codes.
@@ -102,6 +102,6 @@ surface against `did-stellar-registry` v0.1.0 (testnet contract
 ### Notes
 
 - Trust-minimised: the resolver hot path does not call any
-  CredPort-hosted service. A Stellar RPC URL is sufficient.
+  Verqelio-hosted service. A Stellar RPC URL is sufficient.
 - Does NOT publish from this branch automatically — `npm provenance`
   publish only fires from a tagged release in `main`.

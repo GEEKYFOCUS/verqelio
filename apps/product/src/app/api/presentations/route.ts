@@ -15,7 +15,7 @@ import {
   presentationExpiresAt,
   type HolderActionProof,
   type PresentationProof,
-} from '@credport/sdk/presentation';
+} from '@verqelio/sdk/presentation';
 import {
   createStoredPresentation,
   listStoredPresentations,

@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { useFormatter, useTranslations } from 'next-intl';
-import type { CreditCredential } from '@credport/sdk/types';
-import { Button, Card, ProfileSummaryCard, Skeleton, StatePanel } from '@credport/ui';
+import type { CreditCredential } from '@verqelio/sdk/types';
+import { Button, Card, ProfileSummaryCard, Skeleton, StatePanel } from '@verqelio/ui';
 import { RefreshCw, Inbox, FileQuestion, AlertCircle, Wallet } from 'lucide-react';
 import { useSession } from '@/session/session-provider';
 import { useCredentialSource } from '@/lib/use-credential-source';

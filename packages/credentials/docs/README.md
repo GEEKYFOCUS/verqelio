@@ -1,11 +1,11 @@
-# CredPort Credentials — Quick Guide
+# Verqelio Credentials — Quick Guide
 
-React SDK to interact with CredPort API and manage verifiable credentials on Stellar.
+React SDK to interact with Verqelio API and manage verifiable credentials on Stellar.
 
 ## Installation
 
 ```bash
-npm i @credport/credentials
+npm i @verqelio/credentials
 ```
 
 ## Configuration
@@ -16,28 +16,28 @@ API keys are network-specific. Configure as needed:
 
 ```env
 # Option 1: Separate API keys (recommended)
-CREDPORT_API_KEY_MAINNET=your-mainnet-api-key
-CREDPORT_API_KEY_TESTNET=your-testnet-api-key
+VERQELIO_API_KEY_MAINNET=your-mainnet-api-key
+VERQELIO_API_KEY_TESTNET=your-testnet-api-key
 ```
 
 **Get your API key:**
 
-- From the dApp: https://dapp.credport.build
+- From the dApp: https://dapp.verqelio.example
 
 ### 2. Configure the Provider
 
 ```typescript
-import { CredPortConfig, mainNet, testNet } from '@credport/credentials';
+import { VerqelioConfig, mainNet, testNet } from '@verqelio/credentials';
 
 // For mainnet
-<CredPortConfig baseURL={mainNet}>
+<VerqelioConfig baseURL={mainNet}>
   <App />
-</CredPortConfig>
+</VerqelioConfig>
 
 // For testnet
-<CredPortConfig baseURL={testNet}>
+<VerqelioConfig baseURL={testNet}>
   <App />
-</CredPortConfig>
+</VerqelioConfig>
 ```
 
 ## Available Hooks
@@ -211,13 +211,13 @@ try {
 The SDK supports two networks:
 
 ```typescript
-import { mainNet, testNet } from "@credport/credentials";
+import { mainNet, testNet } from "@verqelio/credentials";
 
 // Mainnet
-mainNet; // "https://production-api.credport.build"
+mainNet; // "https://production-api.verqelio.example"
 
 // Testnet
-testNet; // "https://sandbox-api.credport.build"
+testNet; // "https://sandbox-api.verqelio.example"
 ```
 
 The network is automatically detected from the `baseURL` and the corresponding API key is used.
@@ -235,13 +235,13 @@ You don't need to configure these values manually.
 ## Complete Example
 
 ```typescript
-import { CredPortConfig, mainNet, useVault, useCredential, useVaultRead } from '@credport/credentials';
+import { VerqelioConfig, mainNet, useVault, useCredential, useVaultRead } from '@verqelio/credentials';
 
 function App() {
   return (
-    <CredPortConfig baseURL={mainNet}>
+    <VerqelioConfig baseURL={mainNet}>
       <MyComponent />
-    </CredPortConfig>
+    </VerqelioConfig>
   );
 }
 
@@ -279,5 +279,5 @@ Available roles:
 ## Support
 
 - Full documentation: See `README.md` in the repository
-- Issues: https://github.com/CredPort-Team/credport-api/issues
-- dApp: https://dapp.credport.build
+- Issues: https://github.com/Verqelio-Team/verqelio-api/issues
+- dApp: https://dapp.verqelio.example

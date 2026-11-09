@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: credport-api
+    name: verqelio-api
     env: docker
     dockerfilePath: ./Dockerfile.api
     healthCheckPath: /health

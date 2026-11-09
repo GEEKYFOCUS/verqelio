@@ -1,11 +1,11 @@
-import type { CredPortClient } from '@credport/credentials';
+import type { VerqelioClient } from '@verqelio/credentials';
 import { didStellar } from './did';
-import { CredPortCredentialSource } from './credport-credential-source';
+import { VerqelioCredentialSource } from './verqelio-credential-source';
 import type {
   CreditCredential,
   CreditProfileSummary,
   CreditCredentialSource,
-} from '@credport/types';
+} from '@verqelio/types';
 
 // Re-export the interface so consumers can import it from this package too
 export type { CreditCredential, CreditProfileSummary, CreditCredentialSource };
@@ -176,14 +176,14 @@ export interface MockSourceOptions {
   delayMs?: number;
   /** Stellar G... address of the connected holder — required for the real source. */
   owner?: string;
-  /** Full did:stellar for the holder, forwarded to CredPortCredentialSource when present. */
+  /** Full did:stellar for the holder, forwarded to VerqelioCredentialSource when present. */
   holderDid?: string;
   /**
-   * Pre-resolved CredPort SDK client, forwarded to CredPortCredentialSource. Required
+   * Pre-resolved Verqelio SDK client, forwarded to VerqelioCredentialSource. Required
    * when the real source is built outside React render (e.g. the public
-   * verifier constructs it inside an effect), where `useCredPortClient()` cannot run.
+   * verifier constructs it inside an effect), where `useVerqelioClient()` cannot run.
    */
-  client?: CredPortClient;
+  client?: VerqelioClient;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -261,7 +261,7 @@ export function getDataSourceMode(): DataSourceMode {
 
 /**
  * Contract:
- *  - dataSource === 'real' AND options.owner is set  -> real CredPortCredentialSource.
+ *  - dataSource === 'real' AND options.owner is set  -> real VerqelioCredentialSource.
  *  - anything else (dataSource === 'mock', or 'real' with no owner)         -> mock.
  *
  * Mock is a *dev-only* fallback, never a legitimate real-mode path. A
@@ -277,7 +277,7 @@ export function getCredentialSource(options?: MockSourceOptions): CreditCredenti
 
   if (dataSource === 'real') {
     if (options?.owner) {
-      return new CredPortCredentialSource({
+      return new VerqelioCredentialSource({
         owner: options.owner,
         holderDid: options.holderDid,
         client: options.client,

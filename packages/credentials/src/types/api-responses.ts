@@ -1,6 +1,6 @@
 /**
  * API Response Types
- * Type definitions for all CredPort API endpoint responses
+ * Type definitions for all Verqelio API endpoint responses
  */
 
 /**
@@ -142,7 +142,7 @@ export interface VaultListVcIdsResponse {
  */
 export interface VaultGetVcResponse {
   /**
-   * Verifiable Credential object returned by the CredPort contract.
+   * Verifiable Credential object returned by the Verqelio contract.
    * This is the high-level, normalized representation.
    */
   vc?: unknown;

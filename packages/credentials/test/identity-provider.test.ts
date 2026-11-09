@@ -1,5 +1,5 @@
 // Mock the on-chain layer so the test never hits Stellar.
-jest.mock("@credport/did-stellar", () => ({
+jest.mock("@verqelio/did-stellar", () => ({
   buildDidStellar: (network: string, id: string) => `did:stellar:${network}:${id}`,
   // Derive the encoding from the key bytes, like the real implementation:
   // a constant stub would hide distinct keys colliding into one multibase.
@@ -33,7 +33,7 @@ jest.mock("@noble/ed25519", () => {
   };
 });
 
-import { prepareRegisterDidXdr } from "@credport/did-stellar";
+import { prepareRegisterDidXdr } from "@verqelio/did-stellar";
 
 import {
   IssuerIdentityProvider,

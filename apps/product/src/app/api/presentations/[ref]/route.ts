@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { verifyPresentationProof, type HolderActionProof } from '@credport/sdk/presentation';
+import { verifyPresentationProof, type HolderActionProof } from '@verqelio/sdk/presentation';
 import { resolveStoredPresentation, revokeStoredPresentation } from '@/lib/presentation-store';
 
 export const runtime = 'nodejs';

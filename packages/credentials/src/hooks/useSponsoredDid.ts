@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCredPortClient } from "../providers/CredPortClientContext";
+import { useVerqelioClient } from "../providers/VerqelioClientContext";
 import { isTxPrepareResponse, isTxSubmitResponse } from "../types/api-responses";
 import {
   buildSponsoredDidRecord,
@@ -28,7 +28,7 @@ type Signer = (
  * {@link useSponsoredDid.isSupported} to branch before showing the flow.
  */
 export function useSponsoredDid() {
-  const client = useCredPortClient();
+  const client = useVerqelioClient();
 
   return useMemo(
     () => ({

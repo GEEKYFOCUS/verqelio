@@ -1,32 +1,32 @@
-# CredPort Credentials SDK
+# Verqelio Credentials SDK
 
-[![npm](https://img.shields.io/npm/v/%40credport-team%2Fcredentials)](https://www.npmjs.com/package/@credport/credentials)
+[![npm](https://img.shields.io/npm/v/%40verqelio-team%2Fcredentials)](https://www.npmjs.com/package/@verqelio/credentials)
 
-React/TypeScript SDK for [CredPort](https://credport.build): issue, store, verify, and revoke **verifiable credentials on Stellar** through single-tenant vaults, with non-custodial wallet signing and automatic issuer identity (did:stellar) onboarding.
+React/TypeScript SDK for [Verqelio](https://verqelio.example): issue, store, verify, and revoke **verifiable credentials on Stellar** through single-tenant vaults, with non-custodial wallet signing and automatic issuer identity (did:stellar) onboarding.
 
-- **Full documentation:** https://docs.credport.build
-- **Quickstart (zero to credential):** https://docs.credport.build/quickstart
+- **Full documentation:** https://docs.verqelio.example
+- **Quickstart (zero to credential):** https://docs.verqelio.example/quickstart
 
 ## Install
 
 ```bash
-npm install @credport/credentials
+npm install @verqelio/credentials
 # or: yarn add / pnpm add
 ```
 
-Requires React 18 or 19 (peer dependency). Ships ESM + CJS with TypeScript declarations. Subpath exports: `@credport/credentials/hooks` and `@credport/credentials/types`.
+Requires React 18 or 19 (peer dependency). Ships ESM + CJS with TypeScript declarations. Subpath exports: `@verqelio/credentials/hooks` and `@verqelio/credentials/types`.
 
 ## Quick start
 
 ```tsx
-import { CredPortConfig, testNet } from "@credport/credentials";
+import { VerqelioConfig, testNet } from "@verqelio/credentials";
 
-// Get an API key at https://dapp.credport.build (API Keys section)
+// Get an API key at https://dapp.verqelio.example (API Keys section)
 export function Providers({ children }) {
   return (
-    <CredPortConfig baseURL={testNet} apiKey={process.env.NEXT_PUBLIC_CREDPORT_API_KEY}>
+    <VerqelioConfig baseURL={testNet} apiKey={process.env.NEXT_PUBLIC_VERQELIO_API_KEY}>
       {children}
-    </CredPortConfig>
+    </VerqelioConfig>
   );
 }
 ```
@@ -34,7 +34,7 @@ export function Providers({ children }) {
 Issue and verify a credential (your wallet signs; keys never leave the device):
 
 ```ts
-import { useVault, useCredential, useVaultRead } from "@credport/credentials";
+import { useVault, useCredential, useVaultRead } from "@verqelio/credentials";
 
 const { createVault } = useVault();
 const { issue } = useCredential();
@@ -66,16 +66,16 @@ const status = await verifyVc({ owner, vcId: "badge-001" });
 
 | Export | Purpose |
 |--------|---------|
-| `CredPortConfig` / `useCredPortClient` | Provider and direct access to the HTTP client |
+| `VerqelioConfig` / `useVerqelioClient` | Provider and direct access to the HTTP client |
 | `useVault` | `createVault`, `denyIssuer`, `allowIssuer` (issuance is open by default; owners block by exception) |
 | `useCredential` | `issue`, `revoke` |
 | `useVaultRead` | `listVcIds`, `getVc`, `verifyVc` |
 | `useSponsoredDid` | `registerSponsored`, `generateKeys`, `generateDid`, `isSupported` (testnet only) |
-| `CredPortClient` | Everything else: `getConfig`, `vaultSetDid`, `vaultPush`, `vaultSetNewOwner`, `sponsoredVaultCreate`, identity APIs |
-| `CredPortApiError` / `normalizeError` | Typed errors with stable `code`s, 30s timeouts |
-| `mainNet` / `testNet` | Base URL constants (`https://api.{network}.credport.build`); custom URLs accepted |
+| `VerqelioClient` | Everything else: `getConfig`, `vaultSetDid`, `vaultPush`, `vaultSetNewOwner`, `sponsoredVaultCreate`, identity APIs |
+| `VerqelioApiError` / `normalizeError` | Typed errors with stable `code`s, 30s timeouts |
+| `mainNet` / `testNet` | Base URL constants (`https://api.{network}.verqelio.example`); custom URLs accepted |
 
-API keys resolve from the `apiKey` prop or env (`CREDPORT_API_KEY_MAINNET` / `CREDPORT_API_KEY_TESTNET` / `CREDPORT_API_KEY`) and are sent as `X-CredPort-Key`.
+API keys resolve from the `apiKey` prop or env (`VERQELIO_API_KEY_MAINNET` / `VERQELIO_API_KEY_TESTNET` / `VERQELIO_API_KEY`) and are sent as `X-Verqelio-Key`.
 
 ## Issuer identity on a server
 
@@ -84,8 +84,8 @@ The issuer's `did:stellar` and its signing key are held in an `IssuerIdentitySto
 So server-side issuers must say which they want. Without `storage`, the first `getOrCreateIssuerIdentity` (and any `issue()` that omits `issuerDid`) throws `EphemeralIssuerStorageError` before signing or touching the chain:
 
 ```ts
-import { CredPortClient, testNet } from "@credport/credentials";
-import type { IssuerIdentity, IssuerIdentityStorage } from "@credport/credentials";
+import { VerqelioClient, testNet } from "@verqelio/credentials";
+import type { IssuerIdentity, IssuerIdentityStorage } from "@verqelio/credentials";
 
 // Two methods, scoped by network. Back it with your database, a KMS, or an
 // encrypted file — the identity holds private keys, so encrypt it at rest.
@@ -98,7 +98,7 @@ const storage: IssuerIdentityStorage = {
   },
 };
 
-const client = new CredPortClient(testNet, apiKey, { storage });
+const client = new VerqelioClient(testNet, apiKey, { storage });
 ```
 
 For tests, demos, and short-lived scripts, an identity that dies with the process is fine — ask for it explicitly with `{ allowEphemeralStorage: true }` (or pass `new InMemoryIssuerIdentityStorage()`).
@@ -109,10 +109,10 @@ Issuance charges an on-chain fee paid by the issuer: **1 USDC per credential on 
 
 ## Reference
 
-- [SDK reference](https://docs.credport.build/sdk-overview) · [CredPortClient](https://docs.credport.build/credportClient)
-- [API reference](https://docs.credport.build/api-overview) · [Errors](https://docs.credport.build/api-errors)
-- [did:stellar](https://docs.credport.build/did-overview) · [Going to mainnet](https://docs.credport.build/mainnet-guide)
-- [Security & data model](https://docs.credport.build/security)
+- [SDK reference](https://docs.verqelio.example/sdk-overview) · [VerqelioClient](https://docs.verqelio.example/verqelioClient)
+- [API reference](https://docs.verqelio.example/api-overview) · [Errors](https://docs.verqelio.example/api-errors)
+- [did:stellar](https://docs.verqelio.example/did-overview) · [Going to mainnet](https://docs.verqelio.example/mainnet-guide)
+- [Security & data model](https://docs.verqelio.example/security)
 
 ## License
 

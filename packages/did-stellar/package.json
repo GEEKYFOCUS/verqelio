@@ -1,5 +1,5 @@
 {
-  "name": "@credport/did-stellar",
+  "name": "@verqelio/did-stellar",
   "version": "0.1.3",
   "description": "Official TypeScript SDK for the did:stellar v0.1 method. DIF did-resolver compatible, prepare/submit XDR helpers, and W3C-compliant DID Document construction.",
   "type": "module",
@@ -45,16 +45,16 @@
     "decentralized-identity",
     "dif"
   ],
-  "author": "CredPort",
+  "author": "ACTA",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/CredPort-Team/did-stellar/tree/main/packages/resolver",
+  "homepage": "https://github.com/Verqelio-Team/did-stellar/tree/main/packages/resolver",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CredPort-Team/did-stellar.git",
+    "url": "https://github.com/Verqelio-Team/did-stellar.git",
     "directory": "packages/resolver"
   },
   "bugs": {
-    "url": "https://github.com/CredPort-Team/did-stellar/issues"
+    "url": "https://github.com/Verqelio-Team/did-stellar/issues"
   },
   "publishConfig": {
     "access": "public",

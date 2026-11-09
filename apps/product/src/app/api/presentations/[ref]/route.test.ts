@@ -6,8 +6,8 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Keypair } from '@stellar/stellar-sdk';
-import { didStellar } from '@credport/sdk/did';
-import { sep0053MessageHash } from '@credport/sdk/presentation';
+import { didStellar } from '@verqelio/sdk/did';
+import { sep0053MessageHash } from '@verqelio/sdk/presentation';
 import {
   createPresentationRef,
   createStoredPresentation,

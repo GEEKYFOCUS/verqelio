@@ -1,1 +1,1 @@
-export * from '@credport/credentials/hooks';
+export * from '@verqelio/credentials/hooks';

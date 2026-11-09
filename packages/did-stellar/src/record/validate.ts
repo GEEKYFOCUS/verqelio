@@ -2,7 +2,7 @@
  * Client-side validation of {@link DidRecordInput}.
  *
  * Mirrors `validate_record` in
- * `contracts-credport/contracts/did-stellar-registry/src/contract.rs`. The
+ * `contracts-verqelio/contracts/did-stellar-registry/src/contract.rs`. The
  * intent is to reject malformed input before paying for a Soroban
  * simulation, while preserving the contract's authoritative rules: every
  * code raised here corresponds 1:1 to a `RegistryError` so consumers

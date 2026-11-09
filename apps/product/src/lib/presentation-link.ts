@@ -13,7 +13,7 @@ import {
   type PresentationProof,
   type ProofVerification,
   type VerifiablePresentation,
-} from '@credport/sdk/presentation';
+} from '@verqelio/sdk/presentation';
 import type { SignTransactionOpts, WalletConnector } from '@/session/wallet-connector';
 
 const API_ROOT = '/api/presentations';
@@ -207,7 +207,7 @@ export async function revokePresentationLink(
  * A SEP-0053-compliant wallet does NOT sign that string's raw UTF-8 bytes —
  * it signs `SHA-256("Stellar Signed Message:\n" + digestString)` internally
  * and returns a base64-encoded ed25519 signature over that hash. See
- * `sep0053MessageHash` in `packages/credport/src/presentation.ts`, which
+ * `sep0053MessageHash` in `packages/verqelio/src/presentation.ts`, which
  * `verifyPresentationProof` uses to reconstruct the same preimage.
  *
  * Best-effort by design: a wallet without `signMessage`, or one that rejects

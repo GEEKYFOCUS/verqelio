@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCredPortClient } from "../providers/CredPortClientContext";
+import { useVerqelioClient } from "../providers/VerqelioClientContext";
 import type { VaultVerifyVcResponse } from "../types/api-responses";
 
 /**
@@ -7,7 +7,7 @@ import type { VaultVerifyVcResponse } from "../types/api-responses";
  * @returns Methods to read vault data via the API.
  */
 export function useVaultRead() {
-  const client = useCredPortClient();
+  const client = useVerqelioClient();
 
   return useMemo(
     () => ({

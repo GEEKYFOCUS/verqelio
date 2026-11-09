@@ -1,5 +1,5 @@
 /**
- * Typed error hierarchy for `@credport/did-stellar`.
+ * Typed error hierarchy for `@verqelio/did-stellar`.
  *
  * Every error thrown by the SDK is an instance of {@link DidError} with a
  * stable {@link DidErrorCode} string. Consumers branch on `err.code`, never
@@ -112,7 +112,7 @@ export class DidError extends Error {
 /**
  * Numeric Soroban contract error → SDK error code.
  *
- * Keep in lockstep with `contracts-credport/contracts/did-stellar-registry/src/errors.rs`.
+ * Keep in lockstep with `contracts-verqelio/contracts/did-stellar-registry/src/errors.rs`.
  * Adding a new variant requires updating both ends and bumping the SDK
  * minor.
  */

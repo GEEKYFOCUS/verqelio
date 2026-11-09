@@ -69,13 +69,13 @@ importers:
 
   apps/product:
     dependencies:
-      '@credport/sdk':
+      '@verqelio/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@credport/types':
+      '@verqelio/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@credport/ui':
+      '@verqelio/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@creit.tech/stellar-wallets-kit':
@@ -109,7 +109,7 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
     devDependencies:
-      '@credport/config':
+      '@verqelio/config':
         specifier: workspace:*
         version: link:../../packages/config
       '@tailwindcss/postcss':
@@ -163,7 +163,7 @@ importers:
 
   packages/credentials:
     dependencies:
-      '@credport/did-stellar':
+      '@verqelio/did-stellar':
         specifier: workspace:*
         version: link:../did-stellar
       '@noble/ed25519':
@@ -258,17 +258,17 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@credport/credentials':
+      '@verqelio/credentials':
         specifier: workspace:*
         version: link:../credentials
-      '@credport/types':
+      '@verqelio/types':
         specifier: workspace:*
         version: link:../types
       '@stellar/stellar-sdk':
         specifier: ^15.1.0
         version: 15.1.0
     devDependencies:
-      '@credport/config':
+      '@verqelio/config':
         specifier: workspace:*
         version: link:../config
       '@types/react':
@@ -292,7 +292,7 @@ importers:
 
   packages/types:
     devDependencies:
-      '@credport/config':
+      '@verqelio/config':
         specifier: workspace:*
         version: link:../config
       typescript:
@@ -317,7 +317,7 @@ importers:
         specifier: ^3.5.0
         version: 3.7.0
     devDependencies:
-      '@credport/config':
+      '@verqelio/config':
         specifier: workspace:*
         version: link:../config
       '@types/react':

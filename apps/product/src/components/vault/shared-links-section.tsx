@@ -10,7 +10,7 @@ import {
   CardHeader,
   Skeleton,
   StatePanel,
-} from '@credport/ui';
+} from '@verqelio/ui';
 import { AlertCircle, Link2, RefreshCw } from 'lucide-react';
 import {
   listPresentationLinks,

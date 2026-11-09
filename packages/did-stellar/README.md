@@ -1,16 +1,16 @@
-# `@credport/did-stellar`
+# `@verqelio/did-stellar`
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![DIF compliant](https://img.shields.io/badge/DIF-did--resolver-blue.svg)](https://github.com/decentralized-identity/did-resolver)
 
-Official TypeScript SDK for the [`did:stellar` v0.1 method](https://github.com/CredPort-Team/contracts-credport/blob/main/docs/did-spec/did-stellar-v0.1.md).
+Official TypeScript SDK for the [`did:stellar` v0.1 method](https://github.com/Verqelio-Team/contracts-verqelio/blob/main/docs/did-spec/did-stellar-v0.1.md).
 
 | | |
 |---|---|
 | **DID method** | `did:stellar` |
 | **Networks** | `mainnet`, `testnet` |
 | **Testnet registry** | `CB7ATU7SF5QUKJMSULJDJVWJZVDXC23HTZX6NFUDTSFPVT6MA575NNZJ` |
-| **Spec** | [v0.1](https://github.com/CredPort-Team/contracts-credport/blob/main/docs/did-spec/did-stellar-v0.1.md) |
+| **Spec** | [v0.1](https://github.com/Verqelio-Team/contracts-verqelio/blob/main/docs/did-spec/did-stellar-v0.1.md) |
 | **DIF compatibility** | Drop-in driver for [`did-resolver`](https://www.npmjs.com/package/did-resolver) |
 
 ## What's inside
@@ -25,21 +25,21 @@ Official TypeScript SDK for the [`did:stellar` v0.1 method](https://github.com/C
   unsigned XDRs, plus `submitSignedXdr` to deliver them.
 - **Proof of control** — JCS-canonicalised challenges, `buildChallenge`,
   `verifyProofOfControl` (Ed25519, ±5 min replay window).
-- **Optional HTTP client** — `CredPortDidClient` for integrators that
-  prefer talking to [`did.credport.build`](https://did.credport.build) rather than wiring a Stellar RPC
+- **Optional HTTP client** — `VerqelioDidClient` for integrators that
+  prefer talking to [`did.verqelio.example`](https://did.verqelio.example) rather than wiring a Stellar RPC
   themselves.
-- **React hook** — `useDid()` (subpath `@credport/did-stellar/hooks`)
+- **React hook** — `useDid()` (subpath `@verqelio/did-stellar/hooks`)
   for browser apps.
 - **Typed errors** — every failure is a `DidError` with a stable
   `code` string (`did_not_found`, `version_mismatch`, `signature_invalid`, …).
 
-The SDK has **zero CredPort-hosted dependencies** in its hot path. You can
+The SDK has **zero Verqelio-hosted dependencies** in its hot path. You can
 resolve any `did:stellar:...` with just a Stellar RPC URL.
 
 ## Install
 
 ```bash
-npm install @credport/did-stellar
+npm install @verqelio/did-stellar
 # peer (only if you use the ./hooks entrypoint):
 npm install react
 ```
@@ -47,7 +47,7 @@ npm install react
 ## Quickstart — resolve
 
 ```ts
-import { resolveDidStellar } from '@credport/did-stellar';
+import { resolveDidStellar } from '@verqelio/did-stellar';
 
 const { didDocument, didDocumentMetadata } = await resolveDidStellar(
   'did:stellar:testnet:aaaqeayeaudaocajbifqydiob4'
@@ -63,7 +63,7 @@ registryContractId }`.
 
 ```ts
 import { Resolver } from 'did-resolver';
-import { getResolver } from '@credport/did-stellar/resolver';
+import { getResolver } from '@verqelio/did-stellar/resolver';
 
 const resolver = new Resolver({ ...getResolver() });
 const result = await resolver.resolve('did:stellar:testnet:aaaqeayeaudaocajbifqydiob4');
@@ -77,7 +77,7 @@ import {
   buildDidStellar,
   prepareRegisterDidXdr,
   submitSignedXdr,
-} from '@credport/did-stellar';
+} from '@verqelio/did-stellar';
 
 const didId = generateDidId();
 const did = buildDidStellar('testnet', didId);
@@ -114,7 +114,7 @@ import {
   jcsCanonicalize,
   resolveDidStellar,
   verifyProofOfControl,
-} from '@credport/did-stellar';
+} from '@verqelio/did-stellar';
 
 // Verifier issues the challenge:
 const challenge = buildChallenge({
@@ -145,7 +145,7 @@ if (!result.valid) throw result.reason;
 Every SDK function rejects with `DidError`. Branch on `code`:
 
 ```ts
-import { DidError } from '@credport/did-stellar';
+import { DidError } from '@verqelio/did-stellar';
 
 try {
   await prepareUpdateDidXdr({ ... });

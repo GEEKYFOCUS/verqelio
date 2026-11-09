@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Pasaporte crediticio — CredPort",
-    "description": "Historial crediticio portable para inclusión financiera, basado en credenciales verificables de CredPort."
+    "title": "Pasaporte crediticio — Verqelio",
+    "description": "Historial crediticio portable para inclusión financiera, basado en credenciales verificables de Verqelio."
   },
   "nav": {
     "home": "Inicio",
@@ -15,7 +15,7 @@
     "localeEs": "Español"
   },
   "footer": {
-    "tagline": "Historial crediticio portable sobre credenciales verificables de CredPort.",
+    "tagline": "Historial crediticio portable sobre credenciales verificables de Verqelio.",
     "rights": "Todos los derechos reservados."
   },
   "common": {
@@ -26,8 +26,8 @@
   },
   "home": {
     "title": "Historial crediticio",
-    "description": "Historial crediticio portable sobre credenciales verificables de CredPort. Esqueleto del producto — aún sin implementar.",
-    "protocol": "Protocolo CredPort",
+    "description": "Historial crediticio portable sobre credenciales verificables de Verqelio. Esqueleto del producto — aún sin implementar.",
+    "protocol": "Protocolo Verqelio",
     "subtitle": "Posee, administra y comparte tu reputación crediticia verificable. Porta tu historial financiero de forma segura sin depender de agencias de crédito centralizadas.",
     "shareTitle": "Generar Presentación",
     "shareDesc": "Selecciona credenciales de crédito y crea un enlace seguro y verificable para compartir con prestamistas.",
@@ -224,7 +224,7 @@
     "selectAll": "Seleccionar Todo",
     "value": "Valor:",
     "issuer": "Emisor:",
-    "vaultTitle": "Bóveda de Crédito CredPort",
+    "vaultTitle": "Bóveda de Crédito Verqelio",
     "revoked": "Revocada",
     "valid": "Vigente",
     "noHolder": "Conecta tu billetera para generar un enlace de presentación.",
@@ -232,7 +232,7 @@
   },
   "verify": {
     "title": "Reporte de presentación verificable",
-    "subtitle": "Verificado criptográficamente vía CredPort en la red Stellar",
+    "subtitle": "Verificado criptográficamente vía Verqelio en la red Stellar",
     "loading": "Ejecutando verificación criptográfica…",
     "holderInfo": "Datos del titular",
     "holderName": "Nombre del titular",

@@ -13,7 +13,7 @@
 
 import { useSession } from '@/session/session-provider';
 import { useTranslations } from 'next-intl';
-import { Button } from '@credport/ui';
+import { Button } from '@verqelio/ui';
 import { Wallet, LogOut, Loader2 } from 'lucide-react';
 
 /** GABC...7KQ4 — shows first 4 and last 4 chars */

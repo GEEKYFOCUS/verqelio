@@ -4,9 +4,9 @@
  *
  * Reads the on-chain `DidRecord` via Stellar RPC `getLedgerEntries`,
  * constructs the document with {@link buildDidDocument}, and returns a
- * DIF-compatible `DidResolutionResult`. Designed to work offline-of-CredPort:
+ * DIF-compatible `DidResolutionResult`. Designed to work offline-of-Verqelio:
  * the caller only provides the Stellar RPC URL and (optionally) the
- * registry contract ID. No CredPort-hosted endpoint is contacted.
+ * registry contract ID. No Verqelio-hosted endpoint is contacted.
  */
 
 import { buildDidDocument } from '../document/builder';
@@ -22,7 +22,7 @@ import type { NetworkType } from '../network';
 export interface ResolveDidStellarOptions {
   /** Stellar RPC URL. Defaults to the SDF public endpoint for the parsed network. */
   readonly rpcUrl?: string;
-  /** Registry contract ID. Defaults to the canonical CredPort deployment per network. */
+  /** Registry contract ID. Defaults to the canonical Verqelio deployment per network. */
   readonly registryContractId?: string;
   /** Allow plain HTTP (development only). Defaults to inferred from rpcUrl. */
   readonly allowHttp?: boolean;

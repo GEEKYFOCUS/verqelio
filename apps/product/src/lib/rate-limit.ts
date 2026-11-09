@@ -12,7 +12,7 @@
  * same durable driver `getPresentationStore()` already selects.
  */
 
-const GLOBAL_KEY = Symbol.for('credport:rate-limit');
+const GLOBAL_KEY = Symbol.for('verqelio:rate-limit');
 
 type Window = { count: number; resetAt: number };
 

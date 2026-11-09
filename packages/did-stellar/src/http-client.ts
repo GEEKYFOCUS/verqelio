@@ -1,15 +1,15 @@
 /**
- * `CredPortDidClient` — thin HTTP wrapper over the `did-stellar-api`
- * service (Bloque C, e.g. `https://did.credport.build`).
+ * `VerqelioDidClient` — thin HTTP wrapper over the `did-stellar-api`
+ * service (Bloque C, e.g. `https://did.verqelio.example`).
  *
  * The client is *optional*. The canonical path is to use
  * {@link resolveDidStellar} and {@link prepareRegisterDidXdr} directly,
- * which speak Stellar RPC and do not depend on any CredPort-hosted service.
+ * which speak Stellar RPC and do not depend on any Verqelio-hosted service.
  *
  * Use this client when:
  *
  * - you don't have a Soroban RPC URL configured client-side and prefer
- *   to delegate that detail to CredPort, or
+ *   to delegate that detail to Verqelio, or
  * - you are integrating with the DIF Universal Resolver and want a
  *   uniform HTTP fetch path.
  *
@@ -26,8 +26,8 @@ import { DidError } from './errors';
 import type { DidDocument, DidResolutionResult } from './document/types';
 import type { DidRecord, DidRecordInput } from './record/types';
 
-export interface CredPortDidClientOptions {
-  /** Base URL of the `did-stellar-api` service (e.g. `https://did.credport.build`). */
+export interface VerqelioDidClientOptions {
+  /** Base URL of the `did-stellar-api` service (e.g. `https://did.verqelio.example`). */
   readonly baseUrl: string;
   /** Per-request timeout in ms. Defaults to 10_000. */
   readonly timeoutMs?: number;
@@ -47,10 +47,10 @@ export interface DidMutationResponse {
   readonly txId?: string;
 }
 
-export class CredPortDidClient {
+export class VerqelioDidClient {
   private readonly http: AxiosInstance;
 
-  constructor(opts: CredPortDidClientOptions) {
+  constructor(opts: VerqelioDidClientOptions) {
     if (typeof opts.baseUrl !== 'string' || opts.baseUrl.length === 0) {
       throw new DidError('http_error', 'baseUrl must be a non-empty string');
     }

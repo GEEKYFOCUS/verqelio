@@ -2,7 +2,7 @@
 // the process. These tests must therefore prove a NEGATIVE — that nothing was
 // signed and nothing was submitted — so the chain layer is mocked with spies
 // rather than stubbed away.
-jest.mock("@credport/did-stellar", () => ({
+jest.mock("@verqelio/did-stellar", () => ({
   buildDidStellar: (network: string, id: string) => `did:stellar:${network}:${id}`,
   encodeMultikey: (_type: string, publicKey: Uint8Array) =>
     `z${Buffer.from(publicKey).toString("hex")}`,
@@ -22,9 +22,9 @@ jest.mock("@noble/ed25519", () => {
   };
 });
 
-import { prepareRegisterDidXdr, submitSignedXdr } from "@credport/did-stellar";
+import { prepareRegisterDidXdr, submitSignedXdr } from "@verqelio/did-stellar";
 
-import { CredPortClient } from "../src/client";
+import { VerqelioClient } from "../src/client";
 import {
   EphemeralIssuerStorageError,
   InMemoryIssuerIdentityStorage,
@@ -32,7 +32,7 @@ import {
 } from "../src/identity";
 import type { IssuerIdentity, IssuerIdentityStorage } from "../src/identity";
 
-const TESTNET = "https://sandbox-api.credport.build";
+const TESTNET = "https://sandbox-api.verqelio.example";
 const CONTROLLER = "GBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA";
 
 /** A backend that outlives the process, as far as the provider can tell. */
@@ -164,9 +164,9 @@ describe("IssuerIdentityProvider honours an explicit choice", () => {
   });
 });
 
-describe("CredPortClient wiring", () => {
+describe("VerqelioClient wiring", () => {
   it("refuses to onboard an issuer identity with the default storage", async () => {
-    const client = new CredPortClient(TESTNET as never, "test-key");
+    const client = new VerqelioClient(TESTNET as never, "test-key");
 
     await expect(
       client.getOrCreateIssuerIdentity({
@@ -177,7 +177,7 @@ describe("CredPortClient wiring", () => {
   });
 
   it("passes allowEphemeralStorage through to the provider", async () => {
-    const client = new CredPortClient(TESTNET as never, "test-key", {
+    const client = new VerqelioClient(TESTNET as never, "test-key", {
       allowEphemeralStorage: true,
     });
 
@@ -191,7 +191,7 @@ describe("CredPortClient wiring", () => {
 
   it("passes a custom storage through to the provider", async () => {
     const storage = new DurableStorage();
-    const client = new CredPortClient(TESTNET as never, "test-key", { storage });
+    const client = new VerqelioClient(TESTNET as never, "test-key", { storage });
 
     await client.getOrCreateIssuerIdentity({
       controller: CONTROLLER,
@@ -210,8 +210,8 @@ describe("storage selection is deferred until the identity layer is used", () =>
     // A fresh module registry resets the once-per-process latch.
     jest.isolateModules(() => {
       const warn = jest.spyOn(console, "warn").mockImplementation(() => undefined);
-      const { CredPortClient: Fresh } = require("../src/client") as {
-        CredPortClient: typeof CredPortClient;
+      const { VerqelioClient: Fresh } = require("../src/client") as {
+        VerqelioClient: typeof VerqelioClient;
       };
 
       const client = new Fresh(TESTNET as never, "test-key");

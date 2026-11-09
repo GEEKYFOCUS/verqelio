@@ -1,9 +1,9 @@
 'use client';
 
-import { CredPortConfig, mainNet, testNet } from '@credport/sdk';
-import type { baseURL } from '@credport/sdk';
+import { VerqelioConfig, mainNet, testNet } from '@verqelio/sdk';
+import type { baseURL } from '@verqelio/sdk';
 
-// The credport package does not export the StellarNetwork type — declare it locally.
+// The verqelio package does not export the StellarNetwork type — declare it locally.
 type StellarNetwork = 'mainnet' | 'testnet';
 
 function resolveBaseURL(network: StellarNetwork): baseURL {
@@ -19,18 +19,18 @@ function resolveNetwork(): StellarNetwork {
   return raw === 'mainnet' ? 'mainnet' : 'testnet';
 }
 
-interface CredPortProviderProps {
+interface VerqelioProviderProps {
   children: React.ReactNode;
 }
 
-export function CredPortProvider({ children }: CredPortProviderProps) {
+export function VerqelioProvider({ children }: VerqelioProviderProps) {
   const network = resolveNetwork();
   const baseURL = resolveBaseURL(network);
-  const apiKey = process.env.NEXT_PUBLIC_CREDPORT_API_KEY || 'placeholder-batch1-no-api-calls';
+  const apiKey = process.env.NEXT_PUBLIC_VERQELIO_API_KEY || 'placeholder-batch1-no-api-calls';
 
   return (
-    <CredPortConfig baseURL={baseURL} apiKey={apiKey}>
+    <VerqelioConfig baseURL={baseURL} apiKey={apiKey}>
       {children}
-    </CredPortConfig>
+    </VerqelioConfig>
   );
 }

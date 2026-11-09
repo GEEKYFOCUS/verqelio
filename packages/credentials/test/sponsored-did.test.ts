@@ -1,5 +1,5 @@
 // Mock the on-chain layer so these tests never hit Stellar.
-jest.mock("@credport/did-stellar", () => ({
+jest.mock("@verqelio/did-stellar", () => ({
   buildDidStellar: (network: string, id: string) =>
     `did:stellar:${network}:${id}`,
   // Derive the encoding from the key bytes, like the real implementation: a

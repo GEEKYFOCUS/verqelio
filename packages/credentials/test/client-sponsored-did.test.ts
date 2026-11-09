@@ -6,12 +6,12 @@ jest.mock("@noble/ed25519", () => ({
   getPublicKeyAsync: async (priv: Uint8Array) => priv,
 }));
 
-import { CredPortClient } from "../src/client";
-import { CredPortApiError } from "../src/errors";
+import { VerqelioClient } from "../src/client";
+import { VerqelioApiError } from "../src/errors";
 import type { ConfigResponse } from "../src/types/api-responses";
 
-const MAINNET = "https://production-api.credport.build";
-const TESTNET = "https://sandbox-api.credport.build";
+const MAINNET = "https://production-api.verqelio.example";
+const TESTNET = "https://sandbox-api.verqelio.example";
 
 const SPONSOR = "GCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCAAAA";
 const CONTROLLER = "GBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA";
@@ -24,7 +24,7 @@ const RECORD = {
 };
 
 function client(baseURL: string, config?: Partial<ConfigResponse>) {
-  const c = new CredPortClient(baseURL as never, "test-key");
+  const c = new VerqelioClient(baseURL as never, "test-key");
   jest.spyOn(c, "getConfig").mockResolvedValue({
     rpcUrl: "https://rpc.example",
     networkPassphrase: "Test SDF Network ; September 2015",
@@ -35,7 +35,7 @@ function client(baseURL: string, config?: Partial<ConfigResponse>) {
 }
 
 /** Replace the internal axios instance so no request leaves the process. */
-function stubPost(c: CredPortClient, data: unknown) {
+function stubPost(c: VerqelioClient, data: unknown) {
   const post = jest.fn().mockResolvedValue({ data });
   (c as unknown as { axios: { post: unknown } }).axios.post = post;
   return post;
@@ -64,7 +64,7 @@ describe("supportsSponsoredDidRegistration", () => {
   });
 
   it("falls back to the network name when /config is unreachable", async () => {
-    const c = new CredPortClient(TESTNET as never, "test-key");
+    const c = new VerqelioClient(TESTNET as never, "test-key");
     jest.spyOn(c, "getConfig").mockRejectedValue(new Error("offline"));
     await expect(c.supportsSponsoredDidRegistration()).resolves.toBe(true);
   });
@@ -79,9 +79,9 @@ describe("registerSponsoredDid", () => {
       .registerSponsoredDid({ sponsor: SPONSOR, did: DID, record: RECORD })
       .catch((e) => e);
 
-    expect(err).toBeInstanceOf(CredPortApiError);
-    expect((err as CredPortApiError).status).toBe(501);
-    expect((err as CredPortApiError).code).toBe("register_sponsored_unsupported");
+    expect(err).toBeInstanceOf(VerqelioApiError);
+    expect((err as VerqelioApiError).status).toBe(501);
+    expect((err as VerqelioApiError).code).toBe("register_sponsored_unsupported");
     expect(post).not.toHaveBeenCalled();
   });
 

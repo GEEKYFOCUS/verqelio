@@ -34,7 +34,7 @@ export interface VerifiablePresentation {
   type: string[];
   /** Holder DID in did:stellar:{network}:{G…} form. */
   holder: string;
-  /** CredPort vault credential ids included in this presentation. */
+  /** Verqelio vault credential ids included in this presentation. */
   verifiableCredential: string[];
   /** ISO timestamp of creation. */
   created: string;

@@ -35,7 +35,7 @@ import {
   type PresentationStore,
   type StoredPresentationRecord,
   type VerifiablePresentation,
-} from '@credport/sdk/presentation';
+} from '@verqelio/sdk/presentation';
 import { getRedisPresentationStore } from './presentation-store-redis';
 
 /** 32 random bytes → 43 base64url chars. */
@@ -63,7 +63,7 @@ export function isPresentationRef(value: unknown): value is string {
  * re-evaluate this module on every edit and would otherwise drop every link
  * generated since the last save.
  */
-const GLOBAL_KEY = Symbol.for('credport:presentation-store');
+const GLOBAL_KEY = Symbol.for('verqelio:presentation-store');
 
 type GlobalWithStore = typeof globalThis & {
   [GLOBAL_KEY]?: Map<string, StoredPresentationRecord>;

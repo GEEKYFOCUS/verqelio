@@ -9,7 +9,7 @@ const { listPresentationLinks, revokePresentationLink, getWalletConnector } = vi
   getWalletConnector: vi.fn(() => ({})),
 }));
 
-vi.mock('@credport/ui', () => import('@/test/ui-mock'));
+vi.mock('@verqelio/ui', () => import('@/test/ui-mock'));
 
 vi.mock('@/lib/presentation-link', async () => {
   const actual =

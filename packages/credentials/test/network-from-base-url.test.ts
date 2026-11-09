@@ -6,17 +6,17 @@ import { networkFromBaseUrl } from "../src/utils/network-from-base-url";
 // `production-api` stopped matching a bare `includes("mainnet")` check.
 describe("networkFromBaseUrl", () => {
   it("resolves the current hosts", () => {
-    expect(networkFromBaseUrl("https://production-api.credport.build")).toBe("mainnet");
-    expect(networkFromBaseUrl("https://sandbox-api.credport.build")).toBe("testnet");
+    expect(networkFromBaseUrl("https://production-api.verqelio.example")).toBe("mainnet");
+    expect(networkFromBaseUrl("https://sandbox-api.verqelio.example")).toBe("testnet");
   });
 
   it("still resolves the legacy hosts", () => {
-    expect(networkFromBaseUrl("https://api.mainnet.credport.build")).toBe("mainnet");
-    expect(networkFromBaseUrl("https://api.testnet.credport.build")).toBe("testnet");
+    expect(networkFromBaseUrl("https://api.mainnet.verqelio.example")).toBe("mainnet");
+    expect(networkFromBaseUrl("https://api.testnet.verqelio.example")).toBe("testnet");
   });
 
   it("ignores case", () => {
-    expect(networkFromBaseUrl("https://PRODUCTION-API.CredPort.BUILD")).toBe("mainnet");
+    expect(networkFromBaseUrl("https://PRODUCTION-API.Verqelio.BUILD")).toBe("mainnet");
   });
 
   // Guessing mainnet for an unknown host would mean issuing against the real

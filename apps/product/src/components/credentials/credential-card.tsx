@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import type { CreditCredential } from '@credport/sdk/types';
-import { Card, StatusBadge, CategoryIcon, type CredentialStatusKind } from '@credport/ui';
+import type { CreditCredential } from '@verqelio/sdk/types';
+import { Card, StatusBadge, CategoryIcon, type CredentialStatusKind } from '@verqelio/ui';
 import { ChevronRight } from 'lucide-react';
 import { categoryOf, statusKindOf, revokedAtOf } from '@/lib/credentials';
 

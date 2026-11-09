@@ -23,7 +23,7 @@
  */
 
 import { Redis } from '@upstash/redis';
-import type { PresentationStore, StoredPresentationRecord } from '@credport/sdk/presentation';
+import type { PresentationStore, StoredPresentationRecord } from '@verqelio/sdk/presentation';
 
 const RECORD_PREFIX = 'presentation:';
 const HOLDER_SET_PREFIX = 'presentation:holder:';

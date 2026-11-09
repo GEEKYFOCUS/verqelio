@@ -12,8 +12,8 @@ import {
   buildPresentation,
   presentationDigest,
   sep0053MessageHash,
-} from '@credport/sdk/presentation';
-import { didStellar } from '@credport/sdk/did';
+} from '@verqelio/sdk/presentation';
+import { didStellar } from '@verqelio/sdk/did';
 import {
   createStoredPresentation,
   holderActionMessage,

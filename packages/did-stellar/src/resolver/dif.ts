@@ -36,7 +36,7 @@ export type DifResolverFn = (
  *
  * ```ts
  * import { Resolver } from 'did-resolver';
- * import { getResolver } from '@credport/did-stellar/resolver';
+ * import { getResolver } from '@verqelio/did-stellar/resolver';
  *
  * const resolver = new Resolver({ ...getResolver() });
  * const result = await resolver.resolve('did:stellar:testnet:...');

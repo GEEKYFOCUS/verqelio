@@ -1,4 +1,4 @@
-import { DID_STELLAR_PREFIX } from '@credport/sdk/did';
+import { DID_STELLAR_PREFIX } from '@verqelio/sdk/did';
 import {
   Button,
   Card,
@@ -8,7 +8,7 @@ import {
   CardContent,
   CardFooter,
   Badge,
-} from '@credport/ui';
+} from '@verqelio/ui';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { ShieldCheck, Share2, Wallet, ArrowRight } from 'lucide-react';

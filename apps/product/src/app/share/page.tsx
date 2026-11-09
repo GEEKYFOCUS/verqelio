@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { CreditCredential, CreditProfileSummary } from '@credport/sdk/types';
+import { CreditCredential, CreditProfileSummary } from '@verqelio/sdk/types';
 import {
   Card,
   CardHeader,
@@ -16,7 +16,7 @@ import {
   CopyField,
   Badge,
   StatePanel,
-} from '@credport/ui';
+} from '@verqelio/ui';
 import { useFormatter, useTranslations } from 'next-intl';
 import {
   ShieldCheck,

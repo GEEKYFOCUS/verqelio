@@ -2,7 +2,7 @@
  * Which Stellar network a base URL points at.
  *
  * The network drives real decisions inside the client: which DID registry the
- * issuer identity provider talks to, which `CREDPORT_API_KEY_*` variable is read,
+ * issuer identity provider talks to, which `VERQELIO_API_KEY_*` variable is read,
  * and whether sponsored DID registration is offered at all. Getting it wrong is
  * silent, which is what makes it dangerous.
  *

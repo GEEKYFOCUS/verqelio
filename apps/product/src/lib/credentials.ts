@@ -1,11 +1,11 @@
-import type { CreditCategory, CreditCredential } from '@credport/sdk/types';
-import type { CredentialStatusKind } from '@credport/ui';
+import type { CreditCategory, CreditCredential } from '@verqelio/sdk/types';
+import type { CredentialStatusKind } from '@verqelio/ui';
 
 /**
  * View helpers for the holder credential list.
  *
  * The mock data layer (#5) returns the wire-shape `CreditCredential` from
- * `@credport/types`, which carries an issuer-defined `type` string and a
+ * `@verqelio/types`, which carries an issuer-defined `type` string and a
  * coarse `status` of `'valid' | 'revoked'`. The UI groups credentials by the
  * #6 domain `CreditCategory` and renders a richer status, so we derive both
  * here instead of hardcoding them in JSX.

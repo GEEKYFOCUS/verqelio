@@ -1,2 +1,2 @@
-export * from '@credport/credentials/types';
-export * from '@credport/types';
+export * from '@verqelio/credentials/types';
+export * from '@verqelio/types';

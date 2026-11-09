@@ -1,6 +1,6 @@
 /**
  * TypeScript counterparts of the Soroban structs defined in
- * `contracts-credport/contracts/did-stellar-registry/src/model.rs`.
+ * `contracts-verqelio/contracts/did-stellar-registry/src/model.rs`.
  *
  * Two views of the same data are exposed:
  *
@@ -68,7 +68,7 @@ export interface DidRecord extends DidRecordInput {
   readonly deactivated: boolean;
 }
 
-// --- Contract bounds (mirror of contracts-credport/.../model.rs) ----------------
+// --- Contract bounds (mirror of contracts-verqelio/.../model.rs) ----------------
 
 export const MAX_KEY_MULTIBASE_LEN = 128;
 export const MIN_KEY_COUNT_AUTH = 1;

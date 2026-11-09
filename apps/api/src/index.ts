@@ -32,7 +32,7 @@ const keySchema = z.object({
 });
 
 async function requireApiKey(req: express.Request, res: express.Response, next: express.NextFunction) {
-  const header = req.header('X-CredPort-Key');
+  const header = req.header('X-Verqelio-Key') ?? req.header('X-CredPort-Key');
   if (!header) {
     res.status(401).json({ error: 'missing_api_key' });
     return;
@@ -67,7 +67,7 @@ function requireAdminSecret(req: express.Request, res: express.Response, next: e
     return;
   }
 
-  if (req.header('X-CredPort-Admin-Secret') !== expected) {
+  if ((req.header('X-Verqelio-Admin-Secret') ?? req.header('X-CredPort-Admin-Secret')) !== expected) {
     res.status(401).json({ error: 'invalid_admin_secret' });
     return;
   }
@@ -90,7 +90,7 @@ function parseJsonCredential(raw: unknown) {
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'credport-api',
+    service: 'verqelio-api',
     timestamp: new Date().toISOString(),
   });
 });
@@ -128,7 +128,7 @@ app.post('/api/keys', requireAdminSecret, async (req, res) => {
     return;
   }
 
-  res.status(201).json({ apiKey, header: 'X-CredPort-Key' });
+  res.status(201).json({ apiKey, header: 'X-Verqelio-Key' });
 });
 
 app.post('/contracts/vault/create', requireApiKey, async (req, res) => {
@@ -270,7 +270,7 @@ app.post('/contracts/vault/verify-vc', requireApiKey, async (req, res) => {
 });
 
 app.get('/contracts/version', requireApiKey, (_req, res) => {
-  res.json({ version: 'credport-api-mvp-0.1.0' });
+  res.json({ version: 'verqelio-api-mvp-0.1.0' });
 });
 
 app.post('/email/test', requireApiKey, async (req, res) => {
@@ -282,12 +282,12 @@ app.post('/email/test', requireApiKey, async (req, res) => {
 
   const result = await sendMail({
     to: parsed.data.to,
-    subject: 'CredPort email test',
-    text: 'CredPort SMTP is configured.',
+    subject: 'Verqelio email test',
+    text: 'Verqelio SMTP is configured.',
   });
   res.json(result);
 });
 
 app.listen(config.port, () => {
-  console.log(`CredPort API listening on :${config.port}`);
+  console.log(`Verqelio API listening on :${config.port}`);
 });

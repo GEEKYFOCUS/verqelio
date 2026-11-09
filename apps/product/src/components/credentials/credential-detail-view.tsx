@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import type { CreditCredential } from '@credport/sdk/types';
+import type { CreditCredential } from '@verqelio/sdk/types';
 import {
   Button,
   Card,
@@ -16,7 +16,7 @@ import {
   StatePanel,
   StatusBadge,
   type CredentialStatusKind,
-} from '@credport/ui';
+} from '@verqelio/ui';
 import { AlertCircle, ArrowLeft, FileQuestion, RefreshCw, Share2, Wallet } from 'lucide-react';
 import { useSession } from '@/session/session-provider';
 import { useCredentialSource } from '@/lib/use-credential-source';

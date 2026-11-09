@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CreditCredential } from '@credport/sdk/types';
+import type { CreditCredential } from '@verqelio/sdk/types';
 import {
   categoryOf,
   detailClaimEntries,

@@ -1,23 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, screen } from '@testing-library/react';
-import type { CreditCredential } from '@credport/sdk/types';
+import type { CreditCredential } from '@verqelio/sdk/types';
 import { renderWithIntl } from '@/test/render-with-intl';
 
-const { getCredentialSource, getDataSourceMode, getCredential, useSession, credportClient } =
+const { getCredentialSource, getDataSourceMode, getCredential, useSession, verqelioClient } =
   vi.hoisted(() => ({
     getCredentialSource: vi.fn(),
     getDataSourceMode: vi.fn(),
     getCredential: vi.fn(),
     useSession: vi.fn(),
-    credportClient: {},
+    verqelioClient: {},
   }));
 
-vi.mock('@credport/ui', () => import('@/test/ui-mock'));
+vi.mock('@verqelio/ui', () => import('@/test/ui-mock'));
 
-vi.mock('@credport/sdk', () => ({
+vi.mock('@verqelio/sdk', () => ({
   getCredentialSource,
   getDataSourceMode,
-  useCredPortClient: () => credportClient,
+  useVerqelioClient: () => verqelioClient,
 }));
 
 vi.mock('@/session/session-provider', () => ({ useSession }));

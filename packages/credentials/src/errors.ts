@@ -1,14 +1,14 @@
 /**
- * Normalized error surfaced by {@link CredPortClient} for every failed request.
+ * Normalized error surfaced by {@link VerqelioClient} for every failed request.
  *
  * The raw `AxiosError` is hard to consume (its `message` is the opaque
  * `"Request failed with status code 4xx"`, and the useful bits live under
- * `error.response.data`). `CredPortApiError` flattens that into a stable shape so
+ * `error.response.data`). `VerqelioApiError` flattens that into a stable shape so
  * integrators can branch on `status` / `code` instead of digging through the
- * axios object. The CredPort API error body (`{ error, message, request_id }`) is
+ * axios object. The Verqelio API error body (`{ error, message, request_id }`) is
  * mapped onto `code` / `message` / `requestId`.
  */
-export class CredPortApiError extends Error {
+export class VerqelioApiError extends Error {
   /** HTTP status code, or 0 when the request never got a response. */
   readonly status: number;
   /** Stable machine-readable code from the API body (`error` field), or a synthetic one. */
@@ -33,7 +33,7 @@ export class CredPortApiError extends Error {
     cause?: unknown;
   }) {
     super(args.message);
-    this.name = "CredPortApiError";
+    this.name = "VerqelioApiError";
     this.status = args.status;
     this.code = args.code;
     if (args.requestId !== undefined) this.requestId = args.requestId;
@@ -46,7 +46,7 @@ export class CredPortApiError extends Error {
   }
 }
 
-interface CredPortApiErrorBody {
+interface VerqelioApiErrorBody {
   error?: string;
   message?: string;
   request_id?: string;
@@ -62,18 +62,18 @@ interface AxiosLikeError {
 
 /**
  * Convert an unknown thrown value (typically an `AxiosError`) into an
- * {@link CredPortApiError}. Non-axios errors are wrapped verbatim.
+ * {@link VerqelioApiError}. Non-axios errors are wrapped verbatim.
  */
-export function normalizeError(err: unknown): CredPortApiError {
-  if (err instanceof CredPortApiError) return err;
+export function normalizeError(err: unknown): VerqelioApiError {
+  if (err instanceof VerqelioApiError) return err;
 
   const e = err as AxiosLikeError;
   const isTimeout = e?.code === "ECONNABORTED" || /timeout/i.test(e?.message ?? "");
 
   if (e?.response) {
     const status = e.response.status ?? 0;
-    const body = (e.response.data ?? {}) as CredPortApiErrorBody;
-    return new CredPortApiError({
+    const body = (e.response.data ?? {}) as VerqelioApiErrorBody;
+    return new VerqelioApiError({
       status,
       code: body.error ?? `http_${status}`,
       message: body.message ?? e.message ?? `Request failed with status ${status}`,
@@ -84,7 +84,7 @@ export function normalizeError(err: unknown): CredPortApiError {
   }
 
   // No response: timeout or network-level failure.
-  return new CredPortApiError({
+  return new VerqelioApiError({
     status: 0,
     code: isTimeout ? "timeout" : "network_error",
     message: e?.message ?? "Network request failed",

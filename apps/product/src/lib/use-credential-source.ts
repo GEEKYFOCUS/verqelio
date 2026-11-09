@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { getCredentialSource, getDataSourceMode, useCredPortClient } from '@credport/sdk';
-import type { CreditCredentialSource } from '@credport/sdk/types';
+import { getCredentialSource, getDataSourceMode, useVerqelioClient } from '@verqelio/sdk';
+import type { CreditCredentialSource } from '@verqelio/sdk/types';
 import { useSession } from '@/session/session-provider';
 
 export type CredentialSourceState =
@@ -15,7 +15,7 @@ export type CredentialSourceState =
  * own vault (list, detail, share) must go through this hook instead of
  * calling getCredentialSource directly with no arguments.
  *
- * useCredPortClient() is a hook and cannot be called from inside an async
+ * useVerqelioClient() is a hook and cannot be called from inside an async
  * effect, so session + client are read here, during render, and handed to
  * getCredentialSource together, in a single call.
  *
@@ -26,7 +26,7 @@ export type CredentialSourceState =
  */
 export function useCredentialSource(): CredentialSourceState {
   const { status, address, did } = useSession();
-  const client = useCredPortClient();
+  const client = useVerqelioClient();
 
   return React.useMemo(() => {
     if (getDataSourceMode() === 'real' && (status !== 'connected' || !address)) {

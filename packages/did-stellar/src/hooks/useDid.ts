@@ -6,7 +6,7 @@
  * read helpers (`resolve`, `getRecord`).
  *
  * The hook is intentionally bare. The "Signer" abstraction is the same
- * one used in `@credport/credentials`: a function that takes an
+ * one used in `@verqelio/credentials`: a function that takes an
  * unsigned XDR plus a `networkPassphrase` and returns the signed XDR.
  * Wiring it to Freighter, Albedo, Hana, or a server-side key is the
  * integrator's responsibility.

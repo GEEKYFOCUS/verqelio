@@ -18,11 +18,11 @@ RUN pnpm install --frozen-lockfile
 
 COPY apps/api apps/api
 
-RUN pnpm --filter @credport/api build
+RUN pnpm --filter @verqelio/api build
 
 ENV NODE_ENV=production
 ENV PORT=4000
 
 EXPOSE 4000
 
-CMD ["pnpm", "--filter", "@credport/api", "start"]
+CMD ["pnpm", "--filter", "@verqelio/api", "start"]
