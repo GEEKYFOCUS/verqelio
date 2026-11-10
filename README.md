@@ -1,118 +1,181 @@
 # Verqelio
 
-**Portable, wallet-controlled credentials built on Stellar.** Verqelio is a revamp of the ACTA/CredPort credential experience: a web app and developer toolkit for storing, sharing, and verifying digital credentials, with a path to anchoring identity and credential state on Stellar.
+Verqelio is an early-stage, open-source-oriented project for issuing, holding, sharing, and verifying portable digital credentials. It combines a Next.js web application, a Supabase-backed API, TypeScript SDKs, and Stellar/Soroban identity and credential infrastructure.
 
-> **Project status:** This repository is suitable for a testnet/demo deployment when configured as described below. It is not a finished production issuance system: the API's on-chain write preparation currently returns placeholder XDR. See [Known limitations](#known-limitations) before using it for real credentials or funds.
+Verqelio is the rebranded continuation of the ACTA/CredPort credential work. See [Brand migration](docs/brand-migration.md) for the rename and compatibility details.
 
-## What it does
+> **Development status:** This project is under active development. The API's on-chain transaction preparation is not implemented yet and currently returns placeholder transaction data. Demo and mock-data flows should not be treated as proof of real on-chain issuance. See [Known limitations](#known-limitations).
 
-- Connects a holder's Stellar wallet and presents a credential vault interface.
-- Lists, filters, views, shares, and verifies credentials; English and Spanish messages are included.
-- Creates shareable credential presentations and supports revoking share links. In-memory share records are temporary; Upstash Redis can make them durable across restarts.
-- Provides a Supabase-backed API for API keys, vault metadata, credentials, and issuer identities.
-- Includes TypeScript SDKs for DID resolution, wallet-assisted credential flows, and app integration.
-- Includes Soroban contracts for `did:stellar` registration and single-holder credential vaults.
+## Contents
 
-The product is designed around non-custodial wallet signing: a user's wallet is expected to sign transactions locally. The app/API and contracts are separate deployables; deploying the website does not deploy contracts or make placeholder API transactions real.
+- [Features](#features)
+- [Architecture](#architecture)
+- [Getting started](#getting-started)
+- [Configuration](#configuration)
+- [Development commands](#development-commands)
+- [Deployment](#deployment)
+- [Known limitations](#known-limitations)
+- [Contributing](#contributing)
+- [Security](#security)
+- [License](#license)
 
-## Repository map
+## Features
 
-| Path | Purpose |
-| --- | --- |
-| `apps/product` | Next.js 16 web application (default port 3001) |
-| `apps/api` | Express API (default port 4000), Supabase persistence, health/config endpoints |
-| `packages/credentials` | React/TypeScript credential client and hooks |
-| `packages/did-stellar` | Stellar DID records, validation, and resolution |
-| `packages/sdk` | Product-facing credential sources, DID and presentation helpers |
-| `packages/ui`, `packages/types`, `packages/config` | Shared components, types, and configuration |
-| `contracts` | Soroban contract workspace, deployment records, and contract documentation |
-| `supabase/migrations` | Database schema migrations |
-| `docs/deployment-checklist.md` | Hosting setup and demo deployment checklist |
-| `docs/brand-migration.md` | CredPort-to-Verqelio rename details and compatibility notes |
+- Credential vault and profile interfaces, with English and Spanish translations.
+- Credential browsing, filtering, detail views, sharing, and public verification flows.
+- Stellar wallet connection and client-side signing integration.
+- Supabase-backed API for API keys, vault metadata, credentials, and issuer identities.
+- TypeScript packages for credential workflows, DID handling, shared types, and UI.
+- Soroban contracts for `did:stellar` identity registration and single-holder credential vaults.
+- Optional Upstash Redis storage for presentation links; in-memory storage is available for local development and demos.
 
-## Run locally
+## Architecture
 
-### Requirements
+| Component | Location | Responsibility |
+| --- | --- | --- |
+| Product web app | `apps/product` | Next.js user interface and presentation routes |
+| API | `apps/api` | Express endpoints and Supabase persistence |
+| Credentials SDK | `packages/credentials` | TypeScript/React client and credential hooks |
+| DID library | `packages/did-stellar` | Stellar DID records, validation, and resolution |
+| Integration SDK | `packages/sdk` | Credential sources, DID, and presentation helpers |
+| Shared packages | `packages/ui`, `packages/types`, `packages/config` | UI components, shared types, and configuration |
+| Soroban contracts | `contracts` | DID registry, vault factory, and credential vault contracts |
+| Database schema | `supabase/migrations` | Supabase migrations |
+
+The web app, API, database, and contracts are separate parts of the system. Hosting the web app does not deploy the API or contracts.
+
+## Getting started
+
+### Prerequisites
 
 - Node.js `>=22.22.1 <25`
-- pnpm `10.25.0` (Corepack can activate the pinned package manager)
-- Supabase credentials for the API; the web app can start in mock data mode
+- pnpm `10.25.0` (provided through Corepack)
+- Supabase project credentials to run the API
+- A Stellar wallet extension for wallet-connected flows
+
+### Install dependencies
+
+From the repository root:
 
 ```bash
 corepack enable
 pnpm install --frozen-lockfile
+```
+
+### Run the product app
+
+The product can start with mock credential fixtures, so Supabase and the API are not required for this local UI workflow.
+
+```bash
 cp .env.example .env.local
 pnpm --filter @verqelio/product dev
 ```
 
-Open `http://localhost:3001`. To run the API in another terminal:
+Open [http://localhost:3001](http://localhost:3001).
+
+### Run the API
+
+The API requires its server-side environment variables. Create `apps/api/.env` using the relevant values from [`.env.example`](.env.example), then start it from the repository root:
 
 ```bash
 pnpm --filter @verqelio/api dev
 ```
 
-Or start both workspace apps with `pnpm dev`. Set real secrets only in ignored local environment files or your hosting provider's secret manager. Never commit `.env`, `.env.local`, Supabase service-role keys, wallet secrets, or API secrets.
+The API listens on port `4000` by default. Its health endpoint is `/health` and its public network configuration endpoint is `/config`.
+
+Do not commit `.env`, `.env.local`, `apps/api/.env`, database credentials, API secrets, or wallet private keys. Keep the Supabase service-role key on the server only.
 
 ## Configuration
 
-The full variable template is in [`.env.example`](.env.example). For a first testnet demo:
+See [`.env.example`](.env.example) for the environment variable reference.
 
-### Product app (Vercel)
+### Product app
 
-Set these as build/runtime environment variables:
+For local mock mode, the app can use:
 
 ```dotenv
-NEXT_PUBLIC_APP_URL=https://<your-product-host>
-NEXT_PUBLIC_API_BASE_URL=https://<your-api-host>
+NEXT_PUBLIC_APP_URL=http://localhost:3001
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 NEXT_PUBLIC_STELLAR_NETWORK=testnet
 NEXT_PUBLIC_WALLET=real
 NEXT_PUBLIC_DATA_SOURCE=mock
 PRESENTATION_STORE_DRIVER=memory
 ```
 
-`NEXT_PUBLIC_DATA_SOURCE=mock` uses demo fixtures. Switch to `real` only after the API, database, and API key are configured. `NEXT_PUBLIC_WALLET=real` enables real wallet connection; production builds intentionally reject the unsafe mock wallet. Memory-backed presentation links can disappear on a server restart or redeploy. Configure Upstash Redis and set `PRESENTATION_STORE_DRIVER=upstash-redis` when links must persist.
+Set `NEXT_PUBLIC_DATA_SOURCE=real` only when the API, database, and a valid API key are configured. `NEXT_PUBLIC_WALLET=real` enables the real wallet connector. The mock wallet is intentionally blocked in production builds.
 
-### API (Render or another Node host)
+The default in-memory presentation store is process-local; records may be lost after a restart and are not shared between instances. For durable links, configure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`, then set `PRESENTATION_STORE_DRIVER=upstash-redis`.
 
-Configure `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `API_KEY_SECRET`, `ADMIN_BOOTSTRAP_SECRET`, `DID_REGISTRY_CONTRACT_ID`, `VC_VAULT_FACTORY_CONTRACT_ID`, and `VC_VAULT_WASM_HASH`. Set `CORS_ORIGIN` and `NEXT_PUBLIC_APP_URL` to the deployed product origin. For testnet, use the testnet RPC and passphrase values from [`.env.example`](.env.example). Generate fresh random API/admin/encryption secrets for the deployment; do not reuse values from local configuration.
+### API and database
 
-Apply [`supabase/migrations/0001_core.sql`](supabase/migrations/0001_core.sql) to the Supabase project before starting the API. Keep `SUPABASE_SERVICE_ROLE_KEY` server-side; it must never be a `NEXT_PUBLIC_` value or be added to Vercel's public environment.
+Before starting the API, apply [`supabase/migrations/0001_core.sql`](supabase/migrations/0001_core.sql) to your Supabase project. The API requires at least:
 
-## Deploy
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+API_KEY_SECRET=
+DID_REGISTRY_CONTRACT_ID=
+VC_VAULT_FACTORY_CONTRACT_ID=
+VC_VAULT_WASM_HASH=
+```
 
-The repo includes a Render blueprint for the API at [`render.yaml`](render.yaml) and a Docker build at [`Dockerfile.api`](Dockerfile.api). For the product, create a Vercel project rooted at this repository directory (`verqelio/`) and configure:
+For hosted deployments, also set `ADMIN_BOOTSTRAP_SECRET`, `CORS_ORIGIN`, and `NEXT_PUBLIC_APP_URL` to deployment-specific values. Generate new secrets for each environment. Never expose `SUPABASE_SERVICE_ROLE_KEY` through a `NEXT_PUBLIC_` variable or place it in the frontend hosting environment.
+
+## Development commands
+
+Run commands from the repository root:
+
+| Command | Description |
+| --- | --- |
+| `pnpm --filter @verqelio/product dev` | Start the product app |
+| `pnpm --filter @verqelio/api dev` | Start the API |
+| `pnpm --filter @verqelio/product build` | Build the product app |
+| `pnpm --filter @verqelio/api build` | Compile the API |
+| `pnpm typecheck` | Type-check workspace packages |
+| `pnpm lint` | Lint workspace packages |
+| `pnpm test` | Run configured package tests |
+| `pnpm format:check` | Check formatting |
+
+Contract build, test, and deployment commands are documented in [`contracts/README.md`](contracts/README.md). Contract deployment is separate from application deployment.
+
+## Deployment
+
+The API has a Render blueprint in [`render.yaml`](render.yaml) and a Docker build in [`Dockerfile.api`](Dockerfile.api). The product app can be deployed separately to Vercel from the repository root with:
 
 - Install command: `pnpm install --frozen-lockfile`
 - Build command: `pnpm --filter @verqelio/product build`
-- Node.js: `22.x`
+- Node.js version: `22.x`
 
-Deploy the API and web app separately, then set the web app's `NEXT_PUBLIC_API_BASE_URL` to the actual API URL and the API's `CORS_ORIGIN` to the actual web origin. Use [`docs/deployment-checklist.md`](docs/deployment-checklist.md) for the ordered setup, API key creation, and suggested smoke-check routes. In a monorepo hosting setup, ensure the project root is `verqelio`, not the parent workspace containing unrelated projects.
-
-## Workspace commands
-
-```bash
-pnpm dev                                      # run workspace development tasks
-pnpm --filter @verqelio/product build         # build web app
-pnpm --filter @verqelio/api build             # compile API
-pnpm typecheck                                # type-check workspace packages
-pnpm lint                                     # lint workspace packages
-pnpm test                                     # run package test tasks
-```
-
-Soroban contract build/deployment instructions and recorded network deployments are documented in [`contracts/README.md`](contracts/README.md) and `contracts/docs/deployments/`. Contract deployment is a separate operation from hosting the product and API.
+Configure the product's `NEXT_PUBLIC_API_BASE_URL` to the deployed API URL and the API's `CORS_ORIGIN` to the product's public origin. Apply the Supabase migration and set deployment secrets before enabling real-data mode. For a step-by-step checklist, see [`docs/deployment-checklist.md`](docs/deployment-checklist.md).
 
 ## Known limitations
 
-- API transaction preparation currently returns `MOCK_PREPARE_XDR_REPLACE_WITH_SOROBAN_TRANSACTION_BUILDER`. Credential/vault writes are therefore not a complete on-chain transaction flow. Do not claim real chain issuance from this API is production-ready.
-- A demo deployment can use mock credential fixtures and testnet wallet connectivity. Mock-mode screens are for demonstration, not evidence of persisted or chain-verified credentials.
-- In-memory presentation storage and rate limiting are process-local; use a durable shared service for multi-instance/production traffic.
-- Production hardening, deployment secrets, CORS, database policies, monitoring, and end-to-end behavior must be reviewed for the specific deployment.
-- The brand migration does not reserve the Verqelio GitHub organization, repository, domain, or npm scope. Some SDK documentation links use `.example` placeholders.
+- API transaction preparation currently returns placeholder XDR; real on-chain credential and vault writes through these API routes are not complete.
+- Mock fixtures are for demonstrations and development; they are not persisted credentials or proof of chain verification.
+- In-memory presentation storage and rate limiting are process-local. Multi-instance deployments need shared durable services.
+- The repository does not include a root-level license covering the entire monorepo. License files exist for specific subprojects; see [License](#license) before reusing code.
+- Some inherited SDK documentation links use reserved `.example` domains and are not live service URLs.
 
 ## Contributing
 
-Changes should preserve non-custodial signing and keep secrets out of source control. Please include focused tests for behavior changes and update deployment or SDK docs when configuration or public interfaces change. See package-level READMEs for package-specific guidance.
+Contributions are welcome. Before opening a pull request:
+
+1. Check existing issues and open a discussion or issue for substantial changes.
+2. Keep changes focused and include tests for behavior changes.
+3. Update documentation when commands, configuration, or public APIs change.
+4. Run the relevant lint, type-check, and test commands.
+5. Do not commit secrets, real credential data, or wallet private keys.
+
+Pull requests should explain the problem, the change, and how it was verified. For contract changes, include the affected network assumptions and test coverage. The repository does not yet have a root-level `CONTRIBUTING.md` or `CODE_OF_CONDUCT.md`; contributors should follow these instructions and communicate respectfully.
+
+## Security
+
+Do not report vulnerabilities in public issues. The repository currently has package-specific security policies at [`packages/credentials/SECURITY.md`](packages/credentials/SECURITY.md) and [`contracts/SECURITY.md`](contracts/SECURITY.md); they cover their respective components. For issues outside those scopes, use GitHub's private vulnerability reporting for this repository if enabled by maintainers. Do not include secrets or personal credential data in reports.
 
 ## License
 
-See the license files in this repository and the individual packages/contracts for applicable terms and upstream notices.
+There is no root-level license for the entire monorepo at this time. Some subprojects include their own license files, such as [`packages/credentials/LICENSE`](packages/credentials/LICENSE), [`packages/did-stellar/LICENSE`](packages/did-stellar/LICENSE), and [`contracts/LICENSE`](contracts/LICENSE). Those licenses apply only to the components they cover. Review the applicable license before copying, modifying, or distributing code; do not assume the whole repository is licensed under one license.
+
+## Project history
+
+Verqelio continues the ACTA/CredPort credential product work. The rename preserves selected protocol and storage identifiers for compatibility. See [`docs/brand-migration.md`](docs/brand-migration.md) for details.
