@@ -271,8 +271,8 @@ export function holderActionMessage(
   ref?: string
 ): string {
   return action === 'revoke'
-    ? `CredPort:presentations:revoke:${ref}:${holder}:${timestamp}`
-    : `CredPort:presentations:list:${holder}:${timestamp}`;
+    ? `Verqelio:presentations:revoke:${ref}:${holder}:${timestamp}`
+    : `Verqelio:presentations:list:${holder}:${timestamp}`;
 }
 
 export type HolderAuthResult = { ok: true } | { ok: false; reason: 'stale' | 'invalid' };

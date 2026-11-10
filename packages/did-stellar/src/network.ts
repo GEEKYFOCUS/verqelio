@@ -17,11 +17,11 @@ export const DEFAULT_RPC_URLS: Readonly<Record<NetworkType, string>> = Object.fr
   testnet: 'https://soroban-testnet.stellar.org',
 });
 
-/** Upstream ACTA `did-stellar-registry` deployments; unchanged by the product rename. */
+/** Known `did-stellar-registry` deployments. */
 export const DEFAULT_REGISTRY_CONTRACT_IDS: Readonly<Record<NetworkType, string>> = Object.freeze({
-  // Mainnet deploy: see contracts-verqelio/docs/deployments/mainnet.md
+  // Mainnet deployment record: ../../../contracts/docs/deployments/mainnet.md
   mainnet: 'CD6LSWW5ZSXOO5WAIHKQLQ262TW7BPI37PNEVMMA273BAPC65NN2AYXQ',
-  // Tranche 1 deployment: see contracts-verqelio/docs/deployments/testnet.md
+  // Testnet deployment record: ../../../contracts/docs/deployments/testnet.md
   testnet: 'CB7ATU7SF5QUKJMSULJDJVWJZVDXC23HTZX6NFUDTSFPVT6MA575NNZJ',
 });
 

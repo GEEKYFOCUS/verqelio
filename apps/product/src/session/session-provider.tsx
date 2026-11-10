@@ -6,7 +6,7 @@
  *
  * Persistence decision (documented for PR):
  *   In Batch 1 we persist the connected address in localStorage under the key
- *   'credport:session:address'. This is intentionally simple — no JWT, no signing,
+ *   'verqelio:session:address'. This is intentionally simple — no JWT, no signing,
  *   no real auth. When the real wallet is wired (later batch), the connector
  *   itself will handle persistence (Freighter remembers the permission grant).
  *   sessionStorage was considered but rejected: it does not survive a tab
@@ -27,7 +27,7 @@ function resolveNetwork(): StellarNetwork {
   return raw === 'mainnet' ? 'mainnet' : 'testnet';
 }
 
-const SESSION_STORAGE_KEY = 'credport:session:address';
+const SESSION_STORAGE_KEY = 'verqelio:session:address';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

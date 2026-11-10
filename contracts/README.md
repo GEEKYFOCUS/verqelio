@@ -1,8 +1,8 @@
-# contracts-acta
+# Verqelio Soroban Contracts
 
-Soroban smart contracts for the ACTA identity and Verifiable Credential infrastructure on Stellar.
+Soroban smart contracts for decentralized identities and verifiable credential vaults on Stellar.
 
-**Live on mainnet:** [mainnet-v1.0.0](https://github.com/ACTA-Team/contracts-acta/releases/tag/mainnet-v1.0.0) · **Latest contract release:** [vc-vault v0.4.0](https://github.com/ACTA-Team/contracts-acta/releases/tag/vc-vault-v0.4.0)
+Deployment records for the existing mainnet and testnet contracts are maintained in this repository. See [mainnet deployments](docs/deployments/mainnet.md) and [testnet deployments](docs/deployments/testnet.md).
 
 ---
 
@@ -100,9 +100,9 @@ Output files:
 ./scripts/deploy.sh <package> <network> <source-account>
 
 # Examples
-./scripts/deploy.sh did-stellar-registry testnet acta_deployer   # deploy
-./scripts/deploy.sh vc-vault             testnet acta_deployer   # install template, prints WASM hash
-./scripts/deploy.sh vc-vault-factory     testnet acta_deployer   # installs vault + deploys factory
+./scripts/deploy.sh did-stellar-registry testnet verqelio_deployer   # deploy
+./scripts/deploy.sh vc-vault             testnet verqelio_deployer   # install template, prints WASM hash
+./scripts/deploy.sh vc-vault-factory     testnet verqelio_deployer   # installs vault + deploys factory
 ```
 
 `vc-vault` is not deployed standalone - the factory instantiates per-holder vaults via `factory.deploy(...)`. Record the resulting IDs in [`docs/deployments/<network>.md`](docs/deployments/).

@@ -4,8 +4,8 @@
 
 - **Status:** Draft v0.1 - public spec candidate
 - **Method:** `did:stellar`
-- **Canonical repository:** [ACTA-Team/contracts-acta](https://github.com/ACTA-Team/contracts-acta)
-- **Reference implementation:** [ACTA-Team/did-stellar](https://github.com/ACTA-Team/did-stellar) - TypeScript SDK [`@acta-team/did-stellar`](https://www.npmjs.com/package/@acta-team/did-stellar) + hosted HTTP resolver [`did.acta.build`](https://did.acta.build) (§5.8)
+- **Canonical repository:** [GEEKYFOCUS/verqelio](https://github.com/GEEKYFOCUS/verqelio)
+- **Reference implementation:** [GEEKYFOCUS/verqelio](https://github.com/GEEKYFOCUS/verqelio) - TypeScript SDK [`@verqelio/did-stellar`](https://www.npmjs.com/package/@verqelio/did-stellar) + hosted HTTP resolver [`resolver.example`](https://resolver.example) (§5.8)
 - **Networks:** `mainnet`, `testnet`
 - **Last updated:** 2026-07-03
 - **Conforms to:** [W3C DID Core 1.1](https://www.w3.org/TR/did-1.1/)
@@ -43,8 +43,8 @@ is unfamiliar.
 | **DidRecord** | On-chain structure holding the current state of a DID (defined in [`model.rs`](../../contracts/did-stellar-registry/src/model.rs)). |
 | **didId** | Opaque 128-bit identifier. Stored on-chain as 16 raw bytes; rendered everywhere else as base32 lowercase, exactly 26 characters (§2.3). |
 | **Registry contract** | Canonical Soroban contract maintaining the authoritative state of all DIDs on a given network ([`did-stellar-registry`](../../contracts/did-stellar-registry/README.md)). |
-| **Resolver SDK** | The reference TypeScript implementation of this method, [`@acta-team/did-stellar`](https://www.npmjs.com/package/@acta-team/did-stellar): DID resolution, identifier/Multikey utilities, prepare/submit transaction helpers, and proof-of-control helpers (§5.8.1). |
-| **HTTP resolver API** | Hosted, no-auth HTTP service ([`did.acta.build`](https://did.acta.build)) that wraps the resolver SDK and exposes resolution plus lifecycle endpoints (§5.8.2). A convenience wrapper - not a trusted party of the method. |
+| **Resolver SDK** | The reference TypeScript implementation of this method, [`@verqelio/did-stellar`](https://www.npmjs.com/package/@verqelio/did-stellar): DID resolution, identifier/Multikey utilities, prepare/submit transaction helpers, and proof-of-control helpers (§5.8.1). |
+| **HTTP resolver API** | Hosted, no-auth HTTP service ([`resolver.example`](https://resolver.example)) that wraps the resolver SDK and exposes resolution plus lifecycle endpoints (§5.8.2). A convenience wrapper - not a trusted party of the method. |
 | **[Universal Resolver](https://github.com/decentralized-identity/universal-resolver)** | DIF's standard HTTP interface for resolving DIDs of any method (`GET /1.0/identifiers/{did}`). The HTTP resolver API implements this interface. |
 | **Tombstone document** | DID Document produced for a deactivated DID; contains empty cryptographic arrays (Annex A.3). |
 
@@ -89,7 +89,7 @@ flowchart LR
     Wallet[Stellar Wallet G...] --> Client[Client SDK]
     Client --> RPC[Stellar RPC]
     Client --> Registry[did-stellar-registry]
-    API[HTTP resolver API did.acta.build] --> RPC
+    API[HTTP resolver API resolver.example] --> RPC
     Verifier[Verifier / VC consumer] --> RPC
     Verifier -.optional.-> API
     Issuer[Issuer / Integrator] --> RPC
@@ -100,8 +100,8 @@ flowchart LR
 | Actor | Role |
 |---|---|
 | **Wallet** | Any classic Stellar account (`G...`) capable of signing Soroban transactions. Authorizes on-chain mutations. |
-| **Client SDK** | Library that prepares Soroban transactions for the four mutation operations and assembles `DidRecord` payloads. The reference implementation is [`@acta-team/did-stellar`](https://www.npmjs.com/package/@acta-team/did-stellar) (§5.8.1). |
-| **HTTP resolver API** | Optional hosted service ([`did.acta.build`](https://did.acta.build), §5.8.2) exposing resolution and lifecycle endpoints over HTTP. It never holds keys and can be replaced by direct RPC reads - it is not a trusted party. |
+| **Client SDK** | Library that prepares Soroban transactions for the four mutation operations and assembles `DidRecord` payloads. The reference implementation is [`@verqelio/did-stellar`](https://www.npmjs.com/package/@verqelio/did-stellar) (§5.8.1). |
+| **HTTP resolver API** | Optional hosted service ([`resolver.example`](https://resolver.example), §5.8.2) exposing resolution and lifecycle endpoints over HTTP. It never holds keys and can be replaced by direct RPC reads - it is not a trusted party. |
 | **Registry contract** | Canonical Soroban contract per network. Single source of truth for DID state. |
 | **Verifier / Issuer / Integrator** | Any consumer of the DID. Reads current state directly from Stellar RPC. None has a privileged role within the method. |
 | **Contract admin** | Address set at deployment. Can transfer the contract-level admin role through a two-step process. It does **not** authorize, block, or override per-DID mutations in v0.1. |
@@ -956,19 +956,11 @@ updates `didDocumentMetadata.method.stellarAccount` and bumps `versionId`.
 
 ### 5.8 Reference Implementations (Informative)
 
-Two reference implementations of this method live in the
-[ACTA-Team/did-stellar](https://github.com/ACTA-Team/did-stellar) monorepo: a
-TypeScript SDK (`packages/resolver`) and a standalone HTTP resolver service
-(`packages/api`). Both are informative - the normative behavior remains §2–§6 of
-this specification. The design is trust-minimized: the SDK resolves any
-`did:stellar` with nothing but a Stellar RPC URL, and the hosted HTTP service is
-a replaceable convenience wrapper, never a required intermediary.
+The TypeScript SDK implementation is maintained in [`packages/did-stellar`](../../packages/did-stellar). It is informative; normative behavior remains in §§2–6 of this specification. The SDK resolves `did:stellar` directly through Stellar RPC; this repository does not require or operate a hosted resolver service.
 
-#### 5.8.1 TypeScript SDK - `@acta-team/did-stellar`
+#### 5.8.1 TypeScript SDK - `@verqelio/did-stellar`
 
-Published on npm as
-[`@acta-team/did-stellar`](https://www.npmjs.com/package/@acta-team/did-stellar)
-(MIT). It implements every client-side ceremony defined in this specification:
+The package is [`@verqelio/did-stellar`](../../packages/did-stellar) and is licensed under Apache-2.0. It implements every client-side ceremony defined in this specification:
 
 | Area | Exports (selection) | Spec section |
 |---|---|---|
@@ -979,7 +971,7 @@ Published on npm as
 | Mutations | `prepareRegisterDidXdr`, `prepareUpdateDidXdr`, `prepareTransferControllerXdr`, `prepareDeactivateDidXdr`, `submitSignedXdr` | §4.6 |
 | Proof of control | `buildChallenge`, `generateNonce`, `jcsCanonicalize`, `verifyProofOfControl` (±5 min window) | §6 |
 | Errors | Typed `DidError` whose codes mirror the contract's `RegistryError` numbers | §4.7 |
-| React | `useDid()` hook (subpath `@acta-team/did-stellar/hooks`) | - |
+| React | `useDid()` hook (subpath `@verqelio/did-stellar/hooks`) | - |
 
 **Resolution behavior.** `resolveDidStellar` validates syntax (§2.2), decodes the
 `didId`, reads the `DidRecord` persistent entry directly via Stellar RPC
@@ -996,7 +988,7 @@ JavaScript library, so `did:stellar` can be registered alongside other methods:
 
 ```ts
 import { Resolver } from "did-resolver";
-import { getResolver } from "@acta-team/did-stellar/resolver";
+import { getResolver } from "@verqelio/did-stellar/resolver";
 
 const resolver = new Resolver({ ...getResolver() });
 const result = await resolver.resolve("did:stellar:testnet:aaaqeayeaudaocajbifqydiob4");
@@ -1015,75 +1007,12 @@ populated (the ledger-sequence → close-time lookup is not performed). DID URL
 dereferencing and `versionId` / `versionTime` resolution *input* options are not
 implemented; resolution always returns the latest state.
 
-#### 5.8.2 HTTP Resolver API - `did.acta.build`
+#### 5.8.2 Optional HTTP Resolver
 
-A standalone, no-auth HTTP service (Express) deployed at
-[`https://did.acta.build`](https://did.acta.build). It wraps the SDK and serves
-**both networks** from a single deployment, routing by the `network` component
-embedded in the DID. Interactive documentation is served at
-[`/docs`](https://did.acta.build/docs) (Swagger UI) and the machine-readable
-[OpenAPI](https://spec.openapis.org/oas/latest.html) description at
-[`/openapi.json`](https://did.acta.build/openapi.json).
-
-**Resolution endpoint.** The service implements the
-[DIF Universal Resolver](https://github.com/decentralized-identity/universal-resolver)
-driver interface:
-
-```
-GET https://did.acta.build/1.0/identifiers/{did}
-```
-
-Example:
-`https://did.acta.build/1.0/identifiers/did:stellar:testnet:znfxngsh46vkyqu6inrx4omphi`
-
-It returns the §5.7 resolution result and negotiates the representation via the
-`Accept` header: `application/did+ld+json` (default, includes the JSON-LD
-`@context`) or `application/did+json` (same document with `@context` stripped).
-HTTP status mapping follows §5.7.4:
-
-| Condition | HTTP |
-|---|---|
-| Active DID resolved | `200` |
-| `invalidDid` (fails §2.2 regex) | `400` |
-| `notFound` (never registered) | `404` |
-| `representationNotSupported` | `406` |
-| Deactivated DID (tombstone, `didDocumentMetadata.deactivated = true`) | `410` |
-| Network not configured on this deployment (`methodNotSupported`) | `501` |
-| Registry read / upstream RPC failure (`internalError`) | `502` |
-
-**Lifecycle endpoints.** The mutation endpoints implement the §4.6
-prepare → sign → submit split over REST. The service **never holds private
-keys**: mutation endpoints return an unsigned transaction XDR that the caller
-signs with their own wallet and posts back.
-
-| Method | Path | Purpose |
-|---|---|---|
-| `GET` | `/health` | Liveness probe; reports the configured registry contract per network. |
-| `GET` | `/1.0/identifiers/{did}` | W3C/DIF DID resolution (above). |
-| `GET` | `/v1/dids/stellar/{did}` | Raw on-chain `DidRecord` (§3.2), without the W3C document wrapper. |
-| `POST` | `/v1/dids/stellar` | Prepare a `register` (§4.4.1); returns unsigned XDR. |
-| `POST` | `/v1/dids/stellar/{did}/update` | Prepare an `update` (§4.4.3); requires `expectedVersion`. |
-| `POST` | `/v1/dids/stellar/{did}/transfer` | Prepare a `transfer_controller` (§4.4.4); requires `expectedVersion` and `newController`. |
-| `POST` | `/v1/dids/stellar/{did}/deactivate` | Prepare a `deactivate` (§4.4.5); irreversible once submitted. |
-| `POST` | `/v1/dids/stellar/submit` | Submit a signed XDR to the network. |
-
-Errors use a uniform envelope `{ code, message, details? }`, where `code` is the
-SDK's typed error code (mirroring the contract error numbers of §4.7). Notable
-HTTP mappings: `version_mismatch` and `did_already_exists` → `409 Conflict`;
-`did_deactivated` → `410 Gone`; §3.3 validation failures → `400` (or `413` for
-over-length fields); RPC/simulation/submission failures → `502`.
-
-**Operational behavior.** Per-IP rate limiting (default 120 requests / 60 s,
-advertised via `X-RateLimit-Limit` / `X-RateLimit-Remaining`, `429` +
-`Retry-After` on excess), a short resolution cache (default 30 s, configurable;
-optionally Redis-backed), CORS enabled, and `X-Request-ID` correlation. The
-deployment network configuration (registry contract ID and RPC URL per network)
-is provided via environment variables.
-
-**Trust model.** Anything the HTTP API answers can be independently recomputed
-from Stellar RPC with the SDK - integrators who do not want to trust
-`did.acta.build` can self-host the service or resolve directly (§7.11 applies:
-you inherit the trust assumptions of whichever RPC endpoint you read from).
+This repository does not operate a public HTTP resolver service. Implementers may
+provide their own HTTP adapter around the SDK or resolve DIDs directly against
+Stellar RPC. Any hosted resolver is a convenience layer and is not required by
+this method; callers should evaluate the operator and RPC trust assumptions.
 
 ---
 
@@ -1409,7 +1338,7 @@ A conformant implementation of `did:stellar` v0.1 MUST satisfy all of the follow
 
 ## Annex A - Test Vectors
 
-Test vectors are published at [ACTA-Team/contracts-acta](https://github.com/ACTA-Team/contracts-acta) and MUST be verifiable by any conformant implementation. See `test-vectors/vectors.json` in this repository for the machine-readable form.
+Test vectors are published at [GEEKYFOCUS/verqelio](https://github.com/GEEKYFOCUS/verqelio) and MUST be verifiable by any conformant implementation. See `test-vectors/vectors.json` in this repository for the machine-readable form.
 
 All vectors use `network: testnet`. Vector inputs are deterministic (fixed byte sequences) to enable cross-implementation verification.
 
@@ -1757,7 +1686,7 @@ is terminal - a new identity needs a brand-new `did_id` from Step 1.
 - [DIF Universal Resolver](https://github.com/decentralized-identity/universal-resolver)
 - [DIF `did-resolver` (JavaScript)](https://github.com/decentralized-identity/did-resolver)
 - [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- Canonical repository: [ACTA-Team/contracts-acta](https://github.com/ACTA-Team/contracts-acta)
-- Reference implementation: [ACTA-Team/did-stellar](https://github.com/ACTA-Team/did-stellar) - npm [`@acta-team/did-stellar`](https://www.npmjs.com/package/@acta-team/did-stellar), hosted resolver [`did.acta.build`](https://did.acta.build)
+- Canonical repository: [GEEKYFOCUS/verqelio](https://github.com/GEEKYFOCUS/verqelio)
+- Reference implementation: [GEEKYFOCUS/verqelio](https://github.com/GEEKYFOCUS/verqelio) - npm [`@verqelio/did-stellar`](https://www.npmjs.com/package/@verqelio/did-stellar), hosted resolver [`resolver.example`](https://resolver.example)
 
 ---

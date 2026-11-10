@@ -129,7 +129,7 @@ async function decryptField(
  */
 export class IndexedDbIssuerIdentityStorage implements IssuerIdentityStorage {
   // Keep the existing database name so the rebrand cannot orphan signing keys.
-  private static readonly DB_NAME = "credport-issuer-identity";
+  private static readonly DB_NAME = "verqelio-issuer-identity";
   private static readonly STORE_NAME = "identities";
   private static readonly KEY_STORE_NAME = "crypto-keys";
   private static readonly AES_KEY_ID = "assertion-key-aes-gcm";

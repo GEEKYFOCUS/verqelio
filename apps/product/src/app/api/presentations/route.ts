@@ -35,7 +35,7 @@ const CREATE_RATE_WINDOW_MS = 10 * 60 * 1000;
 /**
  * `GET /api/presentations?holder=<did>&timestamp=<ms>&signature=<base64>` —
  * lists the links a holder created. `timestamp`/`signature` prove control of
- * the holder key over `CredPort:presentations:list:{holder}:{timestamp}` (see
+ * the holder key over `Verqelio:presentations:list:{holder}:{timestamp}` (see
  * `holderActionMessage` in `presentation-store.ts`); a DID alone is never
  * enough to discover someone else's share links.
  */

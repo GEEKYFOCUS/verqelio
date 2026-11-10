@@ -64,7 +64,7 @@ interface RevokeRequestBody {
 /**
  * `DELETE /api/presentations/[ref]` — revokes a link on behalf of its holder.
  * The body must prove control of the holder key over
- * `CredPort:presentations:revoke:{ref}:{holder}:{timestamp}` (see
+ * `Verqelio:presentations:revoke:{ref}:{holder}:{timestamp}` (see
  * `holderActionMessage` in `presentation-store.ts`) — the client asserting
  * "I am the holder" is never accepted on its own.
  */

@@ -235,7 +235,7 @@ export class VerqelioClient {
 
   /**
    * Get configuration from the API.
-   * @returns Configuration: `rpcUrl`, `networkPassphrase`, `credportContractId`.
+   * @returns Configuration including `rpcUrl`, `networkPassphrase`, and `factoryContractId`.
    * @throws Error if the API is unavailable.
    */
   async getConfig(): Promise<ConfigResponse> {
@@ -264,17 +264,16 @@ export class VerqelioClient {
   /**
    * Get default runtime configuration from the API.
    * @deprecated Use `getConfig()` instead. Kept for backward compatibility; will be removed in the next major.
-   * @returns Configuration from the API: `rpcUrl`, `networkPassphrase`, `credportContractId`.
+   * @returns Configuration from the API: `rpcUrl`, `networkPassphrase`, and `factoryContractId`.
    */
   async getDefaults() {
     const config = await this.getConfig();
     return {
       rpcUrl: config.rpcUrl,
       networkPassphrase: config.networkPassphrase,
-      credportContractId: config.credportContractId,
-      // Legacy support - map to credportContractId
-      issuanceContractId: config.credportContractId,
-      vaultContractId: config.credportContractId,
+      factoryContractId: config.factoryContractId,
+      issuanceContractId: config.factoryContractId,
+      vaultContractId: config.factoryContractId,
     };
   }
 

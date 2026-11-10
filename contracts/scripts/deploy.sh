@@ -8,7 +8,7 @@ set -eu
 #
 #   package:        did-stellar-registry | vc-vault | vc-vault-factory
 #   network:        testnet | mainnet
-#   source-account: stellar keys alias (e.g. acta_deployer)
+#   source-account: stellar keys alias (e.g. verqelio_deployer)
 #
 # Deployment model (since vc-vault v0.4.0):
 #   - did-stellar-registry: deployed standalone (constructor: --admin).
@@ -18,9 +18,9 @@ set -eu
 #   - vc-vault-factory: deployed with the vault template hash + a contract admin.
 #
 # Examples:
-#   ./scripts/deploy.sh did-stellar-registry testnet acta_deployer
-#   ./scripts/deploy.sh vc-vault            testnet acta_deployer   # install template
-#   ./scripts/deploy.sh vc-vault-factory    testnet acta_deployer   # installs vault + deploys factory
+#   ./scripts/deploy.sh did-stellar-registry testnet verqelio_deployer
+#   ./scripts/deploy.sh vc-vault            testnet verqelio_deployer   # install template
+#   ./scripts/deploy.sh vc-vault-factory    testnet verqelio_deployer   # installs vault + deploys factory
 #
 # Env overrides:
 #   DID_ADMIN / FACTORY_ADMIN - admin address (defaults to the source address)

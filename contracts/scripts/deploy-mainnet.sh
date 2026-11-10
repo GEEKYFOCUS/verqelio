@@ -13,7 +13,7 @@ PASSPHRASE="Public Global Stellar Network ; September 2015"
 RPC_URL="${RPC_URL:-https://mainnet.sorobanrpc.com}"
 HORIZON_URL="https://horizon.stellar.org"
 USDC_ISSUER="GA5ZSEJYB37JRC5AVCIA5MOP4RHTM335X2KGX3IHOJAPP5RE34K4KZVN"
-TMP_IDENTITY="_acta_deployer"
+TMP_IDENTITY="_verqelio_deployer"
 
 if [ -f .env ]; then
     set -a
@@ -260,7 +260,7 @@ print_summary() {
 
 derive_key() {
     : "${DEPLOYER_ADDRESS:?set DEPLOYER_ADDRESS to the deployer G… address in .env}"
-    tmp="_acta_derive"
+    tmp="_verqelio_derive"
     stellar keys rm "$tmp" --force >/dev/null 2>&1 || true
     say "Paste your Freighter 12/24-word recovery phrase when prompted."
     stellar keys add "$tmp" --seed-phrase >/dev/null

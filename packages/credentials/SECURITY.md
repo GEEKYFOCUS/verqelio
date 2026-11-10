@@ -41,8 +41,8 @@ ships, `1.1.x` will receive security fixes for 90 days after that release.
   Tell us anyway, but they are not treated as SDK vulnerabilities
 - Misuse by an integrating application, such as embedding an API key in
   client-side code shipped to end users. See the note below
-- Vulnerabilities in the Soroban contracts — report those against
-  [contracts-verqelio](https://github.com/Verqelio-Team/contracts-verqelio)
+  - Vulnerabilities in the Soroban contracts — report those through the
+  [Verqelio repository's private vulnerability reporting](https://github.com/GEEKYFOCUS/verqelio/security/advisories/new)
 
 **Note on API keys:** an Verqelio API key is a server-side secret. The SDK cannot
 protect a key an application chooses to ship to the browser. That is an
@@ -55,10 +55,9 @@ to know.
 **Do not open a public issue for a security report.**
 
 Use GitHub's private reporting:
-[**Report a vulnerability**](https://github.com/Verqelio-Team/verqelio-credentials/security/advisories/new)
+[**Report a vulnerability**](https://github.com/GEEKYFOCUS/verqelio/security/advisories/new)
 
-If you cannot use that form, email **security@verqelio.example** with `SECURITY` in
-the subject.
+If private reporting is unavailable, contact the repository maintainers privately.
 
 Please include:
 
