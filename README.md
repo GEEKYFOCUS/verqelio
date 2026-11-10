@@ -1,8 +1,6 @@
 # Verqelio
 
-Verqelio is an early-stage, open-source-oriented project for issuing, holding, sharing, and verifying portable digital credentials. It combines a Next.js web application, a Supabase-backed API, TypeScript SDKs, and Stellar/Soroban identity and credential infrastructure.
-
-Verqelio is the rebranded continuation of the ACTA/CredPort credential work. See [Brand migration](docs/brand-migration.md) for the rename and compatibility details.
+Verqelio is an early-stage project for issuing, holding, sharing, and verifying portable digital credentials. It combines a Next.js web application, a Supabase-backed API, TypeScript SDKs, and Stellar/Soroban identity and credential infrastructure.
 
 > **Development status:** This project is under active development. The API's on-chain transaction preparation is not implemented yet and currently returns placeholder transaction data. Demo and mock-data flows should not be treated as proof of real on-chain issuance. See [Known limitations](#known-limitations).
 
@@ -154,7 +152,8 @@ Configure the product's `NEXT_PUBLIC_API_BASE_URL` to the deployed API URL and t
 - Mock fixtures are for demonstrations and development; they are not persisted credentials or proof of chain verification.
 - In-memory presentation storage and rate limiting are process-local. Multi-instance deployments need shared durable services.
 - The repository does not include a root-level license covering the entire monorepo. License files exist for specific subprojects; see [License](#license) before reusing code.
-- Some inherited SDK documentation links use reserved `.example` domains and are not live service URLs.
+- Some SDK documentation links use reserved `.example` domains and are not live service URLs.
+- This update changes browser storage namespaces, signed-message domains, API authentication headers, and the API configuration field to Verqelio-specific names. Existing browser state and older client integrations are not migrated automatically.
 
 ## Contributing
 
@@ -175,7 +174,3 @@ Do not report vulnerabilities in public issues. The repository currently has pac
 ## License
 
 There is no root-level license for the entire monorepo at this time. Some subprojects include their own license files, such as [`packages/credentials/LICENSE`](packages/credentials/LICENSE), [`packages/did-stellar/LICENSE`](packages/did-stellar/LICENSE), and [`contracts/LICENSE`](contracts/LICENSE). Those licenses apply only to the components they cover. Review the applicable license before copying, modifying, or distributing code; do not assume the whole repository is licensed under one license.
-
-## Project history
-
-Verqelio continues the ACTA/CredPort credential product work. The rename preserves selected protocol and storage identifiers for compatibility. See [`docs/brand-migration.md`](docs/brand-migration.md) for details.

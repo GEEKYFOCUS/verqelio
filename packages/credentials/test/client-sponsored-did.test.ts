@@ -28,7 +28,7 @@ function client(baseURL: string, config?: Partial<ConfigResponse>) {
   jest.spyOn(c, "getConfig").mockResolvedValue({
     rpcUrl: "https://rpc.example",
     networkPassphrase: "Test SDF Network ; September 2015",
-    credportContractId: "C".repeat(56),
+    factoryContractId: "C".repeat(56),
     ...config,
   } as ConfigResponse);
   return c;

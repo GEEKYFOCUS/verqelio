@@ -11,13 +11,8 @@ export interface ConfigResponse {
   networkPassphrase: string;
   /** Network the API is serving ('mainnet' | 'testnet'). */
   networkType?: "mainnet" | "testnet";
-  /**
-   * `vc-vault-factory` contract id (v0.4.0). The SDK derives each owner's
-   * single-tenant vault from this. `credportContractId` is a back-compat alias
-   * that now also points at the factory.
-   */
-  factoryContractId?: string;
-  credportContractId: string;
+  /** `vc-vault-factory` contract id used to derive each owner's vault. */
+  factoryContractId: string;
   /** Installed vault template WASM hash (hex). */
   vaultWasmHash?: string;
   /** `did-stellar-registry` contract id for the active network. */

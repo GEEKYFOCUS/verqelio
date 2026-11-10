@@ -196,7 +196,7 @@ owner's vault address server-side, so the surface changes are focused.
   issuer deny/allow helpers (selects which deterministic vault to target).
 - `getContractVersion({ owner })` for a per-vault version.
 - `ConfigResponse` now surfaces `factoryContractId`, `networkType`,
-  `vaultWasmHash`, and `didStellarRegistryId` (with `credportContractId` retained as
+  `vaultWasmHash`, and `didStellarRegistryId` (with `factoryContractId` retained as
   an alias).
 
 ### Fixed

@@ -46,7 +46,7 @@ export function useVault() {
       userSalt?: string;
     }) => {
       const cfg = await client.getConfig();
-      const contractId = args.contractId || cfg.credportContractId;
+      const contractId = args.contractId || cfg.factoryContractId;
 
       if (!contractId) throw new Error("Contract ID not configured");
 
@@ -111,7 +111,7 @@ export function useVault() {
       userSalt?: string;
     }) => {
       const cfg = await client.getConfig();
-      const contractId = args.contractId || cfg.credportContractId;
+      const contractId = args.contractId || cfg.factoryContractId;
 
       if (!contractId) throw new Error("Contract ID not configured");
 
@@ -176,7 +176,7 @@ export function useVault() {
       userSalt?: string;
     }) => {
       const cfg = await client.getConfig();
-      const contractId = args.contractId || cfg.credportContractId;
+      const contractId = args.contractId || cfg.factoryContractId;
 
       if (!contractId) throw new Error("Contract ID not configured");
 

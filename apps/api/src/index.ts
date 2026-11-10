@@ -32,7 +32,7 @@ const keySchema = z.object({
 });
 
 async function requireApiKey(req: express.Request, res: express.Response, next: express.NextFunction) {
-  const header = req.header('X-Verqelio-Key') ?? req.header('X-CredPort-Key');
+  const header = req.header('X-Verqelio-Key');
   if (!header) {
     res.status(401).json({ error: 'missing_api_key' });
     return;
@@ -67,7 +67,7 @@ function requireAdminSecret(req: express.Request, res: express.Response, next: e
     return;
   }
 
-  if ((req.header('X-Verqelio-Admin-Secret') ?? req.header('X-CredPort-Admin-Secret')) !== expected) {
+  if (req.header('X-Verqelio-Admin-Secret') !== expected) {
     res.status(401).json({ error: 'invalid_admin_secret' });
     return;
   }
@@ -101,7 +101,6 @@ app.get('/config', (_req, res) => {
     networkPassphrase: networkPassphrase(),
     networkType: config.stellarNetwork,
     factoryContractId: config.vaultFactoryContractId,
-    credportContractId: config.vaultFactoryContractId,
     vaultWasmHash: config.vaultWasmHash,
     didStellarRegistryId: config.didRegistryContractId,
     didStellarRegistryVersion: config.stellarNetwork === 'testnet' ? '0.3.0' : '0.2.0',

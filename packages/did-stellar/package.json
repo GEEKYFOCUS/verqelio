@@ -21,8 +21,8 @@
   },
   "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "build:watch": "tsup --watch",
+    "build": "node init && tsup",
+    "build:watch": "node init && tsup --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
     "lint:fix": "eslint . --fix",
@@ -45,16 +45,15 @@
     "decentralized-identity",
     "dif"
   ],
-  "author": "ACTA",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/Verqelio-Team/did-stellar/tree/main/packages/resolver",
+  "homepage": "https://github.com/GEEKYFOCUS/verqelio/tree/main/packages/did-stellar",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Verqelio-Team/did-stellar.git",
-    "directory": "packages/resolver"
+    "url": "https://github.com/GEEKYFOCUS/verqelio.git",
+    "directory": "packages/did-stellar"
   },
   "bugs": {
-    "url": "https://github.com/Verqelio-Team/did-stellar/issues"
+    "url": "https://github.com/GEEKYFOCUS/verqelio/issues"
   },
   "publishConfig": {
     "access": "public",
